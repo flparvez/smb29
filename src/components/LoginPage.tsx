@@ -1,3 +1,9 @@
+"use client";
+
+import { signIn } from "next-auth/react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useNotification } from "@/components/notification";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
@@ -6,6 +12,26 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function LoginPage() {
+const [number, setNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+  const { showNotification } = useNotification();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const result = await signIn("credentials", {
+      number,
+      password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      showNotification(result.error, "error");
+    } else {
+      showNotification("Login successful!", "success");
+      router.push("/");
+    }
+  };
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
       <Card className="w-full max-w-sm shadow-xl bg-white p-6 rounded-lg relative">
@@ -21,7 +47,7 @@ export default function LoginPage() {
 
 
         <CardContent>
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Phone Number Field */}
             <div className="flex items-center border border-black rounded-md bg-white text-black overflow-hidden">
               <div className="h-12 w-12 flex items-center justify-center border-r border-gray-300 bg-gray-100">
@@ -46,6 +72,8 @@ export default function LoginPage() {
               </div>
               <Input
                 type="number"
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
                 placeholder="Enter Mobile Number"
                 className="bg-white text-black border-none focus:ring-0 w-full"
                 required
@@ -72,6 +100,8 @@ export default function LoginPage() {
               <Input
                 type="password"
                 placeholder="Enter Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="bg-white text-black border-none focus:ring-0 w-full"
                 required
               />

@@ -5,7 +5,7 @@ export interface IUser {
     name : string;
     number : number;
     refer : number;
-  email: string;
+
   password: string;
   _id?: mongoose.Types.ObjectId;
   createdAt?: Date;
@@ -20,7 +20,7 @@ const userSchema = new Schema<IUser>(
     number : { type: Number, required: true },
     ads: { type: Boolean, default: false },
     admin: { type: Boolean, default: false },
-    email: { type: String, required: true, unique: true },
+
     password: { type: String, required: true },
     refer : { type: Number, }
   },

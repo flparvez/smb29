@@ -1,9 +1,57 @@
+"use client"
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useNotification } from "@/components/notification";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
+
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
+
+  const [password, setPassword] = useState("");
+  const [refer, setRefer] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const router = useRouter();
+  const { showNotification } = useNotification();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      showNotification("Passwords do not match", "error");
+      return;
+    }
+
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ number, password , name,refer }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Registration failed");
+       
+      }
+
+      showNotification("Registration successful! Please log in.", "success");
+      router.push("/login");
+    } catch (error) {
+      showNotification(
+        error instanceof Error ? error.message : "Registration failed",
+        "error"
+      );
+    }
+  };
+
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
       <Card className="w-full max-w-sm shadow-xl bg-white p-6 rounded-lg relative">
@@ -18,7 +66,7 @@ export default function RegisterPage() {
         </div>
 
         <CardContent>
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Full Name Field */}
             <div className="flex items-center border border-black rounded-md bg-white text-black overflow-hidden">
               <div className="h-12 w-12 flex items-center justify-center border-r border-gray-300">
@@ -29,6 +77,8 @@ export default function RegisterPage() {
               <Input
                 type="text"
                 placeholder="Enter Full Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="bg-white text-black border-none focus:ring-0 w-full"
                 required
               />
@@ -59,6 +109,8 @@ export default function RegisterPage() {
               <Input
                 type="number"
                 placeholder="Enter Mobile Number"
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
                 className="bg-white text-black border-none focus:ring-0 w-full"
                 required
               />
@@ -84,6 +136,8 @@ export default function RegisterPage() {
               <Input
                 type="password"
                 placeholder="Enter Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="bg-white text-black border-none focus:ring-0 w-full"
                 required
               />
@@ -109,6 +163,8 @@ export default function RegisterPage() {
               <Input
                 type="password"
                 placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 className="bg-white text-black border-none focus:ring-0 w-full"
                 required
               />
@@ -123,8 +179,10 @@ export default function RegisterPage() {
               <Input
                 type="number"
                 placeholder="Enter Refer (1234)"
+                value={refer}
+                onChange={(e) => setRefer(e.target.value)}
                 className="bg-white text-black border-none focus:ring-0 w-full"
-                required
+             
               />
             </div>
 
