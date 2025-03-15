@@ -1,7 +1,7 @@
 //  NextAuthOption
 
 import { NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+// import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { connectToDb } from "./db";
 import User from "@/models/User";
@@ -10,10 +10,10 @@ import bcrypt from 'bcryptjs'
 
 export const authOptions:NextAuthOptions = {
     providers : [
-        GoogleProvider({
-            clientId : process.env.GOOGLE_CLIENT_ID!,
-            clientSecret : process.env.GOOGLE_CLIENT_SECRET!
-        }),
+        // GoogleProvider({
+        //     clientId : process.env.GOOGLE_CLIENT_ID!,
+        //     clientSecret : process.env.GOOGLE_CLIENT_SECRET!
+        // }),
         CredentialsProvider({
             name : "Credentials",
             credentials : {
@@ -76,26 +76,7 @@ export const authOptions:NextAuthOptions = {
     //  callbacks
 
     callbacks : {
-        // signIn: async({user,account}) =>{
-      
-        //     if (account?.provider === 'google') {
-        //       try {
-        //         const {email,name,id} =user;
-    
-        //          await connectToDb();
-        //          const alreadyUser = await User.findOne({email});
-        //          if(!alreadyUser) await User.create({email,name,googleId:id})
-    
-        //           return true;
-    
-        //       } catch (err) {
-        //         throw  err
-        //       }
-        //     }
-        //     return false;
-        
-          
-        // },
+  
         async jwt({token, user}){
             if (user) {
                 token.id = user.id
@@ -122,7 +103,7 @@ export const authOptions:NextAuthOptions = {
     },
     
     pages : {
-      signIn: "/auth/login",  
+      signIn: "/login",  
       error : "/auth/login"
     },
     session : {

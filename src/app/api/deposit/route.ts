@@ -1,51 +1,59 @@
 import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth/next"
 import { connectToDb } from "@/lib/db";
 import Deposit, { IDeposit } from "@/models/Deposit";
-import mongoose from "mongoose";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 
 export const POST = async (req: NextRequest) => {
-
     try {
-        const session = await getServerSession(authOptions);
+        // Retrieve the session from NextAuth
+        const session = await getServerSession( authOptions)
+console.log(session)
+        // If no session, return Unauthorized response
         if (!session) {
-            NextResponse.json(
-                {error : "Unauthorized"}, {status: 401}
-            )
+            return new NextResponse(
+                JSON.stringify({ error: "Unauthorized" }),
+                { status: 401 }
+            );
         }
+
+        // Connect to the database
         await connectToDb();
-        const body:IDeposit = await req.json();
- 
-        if (
-            !body.method ||
-            !body.amount ||
-            !body.trx
-        ) {
-            return NextResponse.json(
-                {error : "All fields are required"}, {status: 400}
-            )
+
+        // Parse the request body
+        const body: IDeposit = await req.json();
+
+        // Validate required fields
+        if (!body.method || !body.amount || !body.trx) {
+            return new NextResponse(
+                JSON.stringify({ error: "All fields are required" }),
+                { status: 400 }
+            );
         }
 
-
-        const depositData ={
+        // Add user ID to the deposit data
+        const depositData = {
             ...body,
-            user: session?.user.id
-        }
+            user: session.user.id,
+        };
 
+        // Create a new deposit record
         const deposit = await Deposit.create(depositData);
+
+        // Return success response with created deposit
         return new NextResponse(
             JSON.stringify(deposit),
             { status: 201 }
-          );
+        );
     } catch (error) {
-        console.log(error)
+        console.error("Error creating deposit:", error);
         return new NextResponse(
-            JSON.stringify({ error: 'Category Creation Errors: ' + error }),
-            { status: 400 }
-          );
+            JSON.stringify({ error: `Deposit Creation Errors: ${error}` }),
+            { status: 500 }
+        );
     }
-}
+};
 
 
 export async function DELETE(request: NextRequest) {
