@@ -2,12 +2,10 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth/next";
 import { connectToDb } from "@/lib/db";
 import Plan, { IPlan } from "@/models/Plan";
-
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/User";
 
-
-// --- POST: Create a new plan ---
+// --- POST: Create a new plan and deduct price from user balance ---
 export const POST = async (req: NextRequest) => {
   try {
     const session = await getServerSession(authOptions);
@@ -20,10 +18,10 @@ export const POST = async (req: NextRequest) => {
 
     // Get request body (Plan data)
     const body: IPlan = await req.json();
-    const { dailyAds,dailyIncome,price,title,user,validity } = body;
+    const { title, price, dailyAds, dailyIncome, validity } = body;
 
     // Check if all required fields are provided
-    if (!body.title || !body.price || !body.dailyAds || !body.dailyIncome || !body.validity) {
+    if (!title || !price || !dailyAds || !dailyIncome || !validity) {
       return new NextResponse(
         JSON.stringify({ error: "All fields (title, price, dailyAds, dailyIncome, validity) are required" }),
         { status: 400 }
@@ -37,26 +35,35 @@ export const POST = async (req: NextRequest) => {
       dailyAds,
       dailyIncome,
       validity,
-      user: session.user.id,
-      
-      // Attach user from session
+      user: session.user.id, // Attach user from session
     };
 
     const newPlan = await Plan.create(planData);
-    const Planuser = await User.findById(user._id);
-    if (Planuser) {
-      Planuser.balance -= price;
-      await Planuser.save();
+
+    // Find the user who is purchasing the plan
+    const user = await User.findById(session.user.id); // Get the current logged-in user
+
+    // Check if the user has enough balance to buy the plan
+    if (!user || user.balance < price) {
+      return new NextResponse(
+        JSON.stringify({ error: "Insufficient balance to purchase this plan" }),
+        { status: 400 }
+      );
     }
+
+    // Decrease plan price from user's balance
+    user.balance -= price;
+    await user.save();
+
     // Return success response
     return new NextResponse(
-      JSON.stringify({ message: "Plan created successfully", plan: newPlan }),
+      JSON.stringify({ message: "Plan purchased successfully", plan: newPlan, remainingBalance: user.balance }),
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error creating plan:", error);
+    console.error("Error purchasing plan:", error);
     return new NextResponse(
-      JSON.stringify({ error: `Plan creation failed: ${error}` }),
+      JSON.stringify({ error: `Plan purchase failed: ${error}` }),
       { status: 500 }
     );
   }
