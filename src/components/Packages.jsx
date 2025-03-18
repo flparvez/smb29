@@ -1,15 +1,50 @@
 "use client"
 import axios from 'axios';
-import React from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import React, { useCallback, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
-interface Package {
-  title: string;
-  price: number;
-  dailyAds: number;
-  dailyIncome: number;
-  validity: number;
-}
+
 const Packages = () => {
+    const { data: session } = useSession();
+      const [userData, setUserData] = useState(null);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState("");
+     
+      const router = useRouter();
+        // Fetch user data by session ID
+    const fetchUserData = useCallback(async () => {
+      if (status === "loading") return; // Session loading
+  
+      if (!session?.user?.id) {
+        setError("User not found");
+        setLoading(false);
+        return;
+      }
+  
+      try {
+        setLoading(true);
+        const { data } = await axios.get(`/api/auth/user?id=${session.user.id}`);
+        setUserData(data);
+        setError("");
+      } catch (err) {
+        console.error("Failed to fetch user data:", err);
+        setError("Failed to load user data");
+        toast.error("Could not load user details");
+      } finally {
+        setLoading(false);
+      }
+    }, [session]);
+  
+    useEffect(() => {
+      fetchUserData();
+    }, [fetchUserData]);
+  
+    // Show loading or error message
+    if (loading) return <p>Loading user data...</p>;
+    if (error) return <p className="text-red-500">{error}</p>;
+  
   const packages = [
     {
       title: "Basic",
@@ -56,9 +91,16 @@ const Packages = () => {
   ];
 
  // Handle Buy Now button click
- const handleBuyNow = async (plan:Package) => {
+ const handleBuyNow = async (plan) => {
     try {
-     
+  // plan price if not more than Your Account Balance
+      if (plan.price > userData?.balance) {
+        toast.error('Insufficient balance to purchase this plan! Please recharge your account.');
+        router.push('/user/deposit');
+      }
+     if (!confirm(`Are you sure you want to purchase the ${plan.title} plan?`)) {
+        return;
+      }
       const response = await axios.post('/api/save-plan', {
         title: plan.title,
         price: plan.price,
@@ -69,11 +111,12 @@ const Packages = () => {
       });
 
       if (response.status === 200) {
-        alert('Plan purchased successfully!');
+        toast.success('Plan purchased successfully!');
+        router.push('/user/dashboard');
       }
     } catch (error) {
       console.error('Error purchasing plan:', error);
-      alert('Failed to purchase the plan!');
+      toast.error('Failed to purchase the plan!');
     }
   }
   return (

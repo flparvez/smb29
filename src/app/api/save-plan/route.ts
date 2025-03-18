@@ -4,6 +4,7 @@ import { connectToDb } from "@/lib/db";
 import Plan, { IPlan } from "@/models/Plan";
 
 import { NextRequest, NextResponse } from "next/server";
+import User from "@/models/User";
 
 
 // --- POST: Create a new plan ---
@@ -19,6 +20,7 @@ export const POST = async (req: NextRequest) => {
 
     // Get request body (Plan data)
     const body: IPlan = await req.json();
+    const { dailyAds,dailyIncome,price,title,user,validity } = body;
 
     // Check if all required fields are provided
     if (!body.title || !body.price || !body.dailyAds || !body.dailyIncome || !body.validity) {
@@ -30,12 +32,22 @@ export const POST = async (req: NextRequest) => {
 
     // Create new plan with user reference
     const planData = {
-      ...body,
-      user: session.user.id, // Attach user from session
+      title,
+      price,
+      dailyAds,
+      dailyIncome,
+      validity,
+      user: session.user.id,
+      
+      // Attach user from session
     };
 
     const newPlan = await Plan.create(planData);
-
+    const Planuser = await User.findById(user._id);
+    if (Planuser) {
+      Planuser.balance -= price;
+      await Planuser.save();
+    }
     // Return success response
     return new NextResponse(
       JSON.stringify({ message: "Plan created successfully", plan: newPlan }),

@@ -16,7 +16,7 @@ export default function HeaderNavbar() {
 
     // Fetch user data by session ID
     const fetchUserData = useCallback(async () => {
-      if (status === "loading") return; // Session loading হলে কিছু করবে না
+      if (status === "loading") return; // Session loading
   
       if (!session?.user?.id) {
         setError("User not found");
