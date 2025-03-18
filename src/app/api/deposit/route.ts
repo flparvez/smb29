@@ -1,135 +1,119 @@
 import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth/next"
+import { getServerSession } from "next-auth/next";
 import { connectToDb } from "@/lib/db";
 import Deposit, { IDeposit } from "@/models/Deposit";
+import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 
+// --- POST: Create a new deposit ---
 export const POST = async (req: NextRequest) => {
-    try {
-        // Retrieve the session from NextAuth
-        const session = await getServerSession( authOptions)
-console.log(session)
-        // If no session, return Unauthorized response
-        if (!session) {
-            return new NextResponse(
-                JSON.stringify({ error: "Unauthorized" }),
-                { status: 401 }
-            );
-        }
-
-        // Connect to the database
-        await connectToDb();
-
-        // Parse the request body
-        const body: IDeposit = await req.json();
-
-        // Validate required fields
-        if (!body.method || !body.amount || !body.trx) {
-            return new NextResponse(
-                JSON.stringify({ error: "All fields are required" }),
-                { status: 400 }
-            );
-        }
-
-        // Add user ID to the deposit data
-        const depositData = {
-            ...body,
-            user: session.user.id,
-        };
-
-        // Create a new deposit record
-        const deposit = await Deposit.create(depositData);
-
-        // Return success response with created deposit
-        return new NextResponse(
-            JSON.stringify(deposit),
-            { status: 201 }
-        );
-    } catch (error) {
-        console.error("Error creating deposit:", error);
-        return new NextResponse(
-            JSON.stringify({ error: `Deposit Creation Errors: ${error}` }),
-            { status: 500 }
-        );
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
     }
+
+    await connectToDb();
+    const body: IDeposit = await req.json();
+
+    if (!body.method || !body.amount || !body.trx) {
+      return new NextResponse(JSON.stringify({ error: "All fields are required" }), { status: 400 });
+    }
+
+    const depositData = { ...body, user: session.user.id, approved: false };
+    const deposit = await Deposit.create(depositData);
+
+    return new NextResponse(
+      JSON.stringify({ message: "Deposit request submitted. Awaiting approval.", deposit }),
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("Error creating deposit:", error);
+    return new NextResponse(JSON.stringify({ error: `Deposit creation failed: ${error}` }), { status: 500 });
+  }
 };
 
+// --- PATCH: Approve deposit & update user balance ---
+export const PATCH = async (req: NextRequest) => {
+  try {
+    const { depositId } = await req.json();
 
-export async function DELETE(request: NextRequest) {
-
-    try {
-         const { searchParams } = new URL(request.url);
-
-        const id = searchParams.get('id');
-        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-            return NextResponse.json({ error: "Invalid or missing  ID" }, { status: 400 });
-        }
-        
-// find deposit by id and delete
- await Deposit.findByIdAndDelete(id);
- return NextResponse.json({ message: "Deposit deleted successfully" });
-
-    } catch (error) {
-        return new NextResponse(
-            JSON.stringify({ error: 'Category Creation Errors: ' + error }),
-            { status: 400 }
-          );
+    if (!depositId || !mongoose.Types.ObjectId.isValid(depositId)) {
+      return new NextResponse(JSON.stringify({ error: "Invalid deposit ID" }), { status: 400 });
     }
-}
 
-export async function PUT(request: NextRequest) {
-    try {
-        const { searchParams } = new URL(request.url);  
-        const id = searchParams.get('id');
-        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-            return NextResponse.json({ error: "Invalid or missing  ID" }, { status: 400 });
-        }
-        const body:IDeposit = await request.json();
-        if (
-            !body.method ||
-            !body.amount ||
-            !body.trx ||
-            !body.approved
-        ) {
-            return NextResponse.json(
-                {error : "All fields are required"}, {status: 400}
-            )
-        }
-        await connectToDb();
-        const deposit = await Deposit
-        .findById
-        (id);
-        if (!deposit) {
-            return NextResponse.json({ error: "Deposit not found" }, { status: 404 });
-        }
-        deposit.amount = body.amount;
-        deposit.method = body.method;
-        deposit.approved = body.approved;
-        await deposit.save();
-        return NextResponse.json(deposit);
-    } catch (error) {
-        return new NextResponse(
-            JSON.stringify({ error: 'Category Creation Errors: ' + error }),
-            { status: 400 }
-          );
+    await connectToDb();
+    const deposit = await Deposit.findById(depositId).populate("user");
+    if (!deposit || deposit.approved) {
+      return new NextResponse(JSON.stringify({ error: "Invalid or already approved deposit" }), { status: 400 });
     }
-}
 
+    deposit.approved = true;
+    await deposit.save();
 
-export async function GET(){
-    try {
-        await connectToDb();
-        const deposits =await Deposit.find({}).sort({createdAt: -1}).lean().populate("user");
-        return new NextResponse(
-            JSON.stringify(deposits),
-            { status: 200 }
-          );
-    } catch (error) {
-        return new NextResponse(
-            JSON.stringify({ error: 'Category Creation Errors: ' + error }),
-            { status: 400 }
-          );
-        
+    const user = await User.findById(deposit.user._id);
+    if (user) {
+      user.balance += deposit.amount;
+      await user.save();
     }
-}
+
+    return new NextResponse(JSON.stringify({ message: "Deposit approved successfully", user }), { status: 200 });
+  } catch (error) {
+    console.error("Error approving deposit:", error);
+    return new NextResponse(JSON.stringify({ error: `Deposit approval failed: ${error}` }), { status: 500 });
+  }
+};
+
+// --- DELETE: Remove a deposit ---
+export const DELETE = async (request: NextRequest) => {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "Invalid or missing ID" }, { status: 400 });
+    }
+    await Deposit.findByIdAndDelete(id);
+    return NextResponse.json({ message: "Deposit deleted successfully" });
+  } catch (error) {
+    return new NextResponse(JSON.stringify({ error: "Deposit deletion failed: " + error }), { status: 400 });
+  }
+};
+
+// --- PUT: Update deposit details ---
+export const PUT = async (request: NextRequest) => {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "Invalid or missing ID" }, { status: 400 });
+    }
+    const body: IDeposit = await request.json();
+    if (!body.method || !body.amount || !body.trx) {
+      return NextResponse.json({ error: "All fields are required" }, { status: 400 });
+    }
+    await connectToDb();
+    const deposit = await Deposit.findById(id);
+    if (!deposit) {
+      return NextResponse.json({ error: "Deposit not found" }, { status: 404 });
+    }
+    deposit.amount = body.amount;
+    deposit.method = body.method;
+    deposit.approved = body.approved;
+    await deposit.save();
+    return NextResponse.json(deposit);
+  } catch (error) {
+    return new NextResponse(JSON.stringify({ error: "Deposit update failed: " + error }), { status: 400 });
+  }
+};
+
+// --- GET: Fetch all deposits ---
+export const GET = async () => {
+  try {
+    await connectToDb();
+    const deposits = await Deposit.find({}).sort({ createdAt: -1 }).lean().populate("user");
+    return new NextResponse(JSON.stringify(deposits), { status: 200 });
+  } catch (error) {
+    return new NextResponse(JSON.stringify({ error: "Failed to fetch deposits: " + error }), { status: 400 });
+  }
+};
