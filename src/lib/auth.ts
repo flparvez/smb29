@@ -27,6 +27,11 @@ export const authOptions:NextAuthOptions = {
                     type : "number",
                     placeholder : "Number"
                 },
+                 balance : {
+                    label : "Balance",
+                    type : "number",
+                    placeholder : "Balance"
+                },
             
                 password : {
                     label : "Password",
@@ -58,6 +63,7 @@ export const authOptions:NextAuthOptions = {
                 return {
                     id: user._id.toString(),
                     number : user.number,
+                    balance : user.balance,
                   
                     name : user.name,
                     role : user.role,
@@ -95,6 +101,7 @@ export const authOptions:NextAuthOptions = {
                 session.user.id = token.id as string
                 session.user.name = token.name as string
                 session.user.number = token.number as number
+                session.user.balance = token.balance as number
                 session.user.role = token.role as string
             }
 
