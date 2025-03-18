@@ -1,25 +1,25 @@
-"use client";
-
-import { signIn } from "next-auth/react";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-
+"use client"
+import { signIn, useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-
-
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [number, setNumber] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
+  const { data: session } = useSession();
 
-
-     const router = useRouter();
-
-
+  // Use useEffect to handle redirect after component render
+  useEffect(() => {
+    if (session) {
+      router.push('/user/dashboard');
+    }
+  }, [session, router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,10 +30,9 @@ export default function LoginPage() {
     });
 
     if (result?.error) {
-      toast.error(result.error, );
+      toast.error(result.error);
     } else {
       toast.success("Login successful!");
-      router.push("/");
     }
   };
   return (

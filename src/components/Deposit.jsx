@@ -74,7 +74,7 @@ router.push('/user/deposit/manual');
     </div>
     <div className="flex gap-3 items-center justify-center m-5 p-4 bg-white rounded-lg py-5 shadow">
       <h2 className="text-xl">Balance:</h2>
-      <h2 className="text-[#0c0ce8] text-xl font-bold">100 Taka</h2>
+      <h2 className="text-[#0c0ce8] text-xl font-bold">৳100</h2>
     </div>
 
 

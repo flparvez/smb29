@@ -4,19 +4,27 @@ import { Input } from "@/components/ui/input";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
 export default function RegisterPage() {
 
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
+  const { data: session } = useSession();
 
   const [password, setPassword] = useState("");
   const [refer, setRefer] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const router = useRouter();
+  // Use useEffect to handle redirect after component render
+  useEffect(() => {
+    if (session) {
+      router.push('/user/dashboard');
+    }
+  }, [session, router]);
 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

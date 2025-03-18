@@ -57,7 +57,7 @@ const UserDetails = () => {
             <strong>Number:</strong> {userData.number}
           </p>
           <p>
-            <strong>Balance:</strong> ${userData.balance.toFixed(2)}
+            <strong>Balance:</strong> ৳{userData.balance.toFixed(2)}
           </p>
           {/* <p>
             <strong>Role:</strong> {userData.admin ? "Admin" : "User"}

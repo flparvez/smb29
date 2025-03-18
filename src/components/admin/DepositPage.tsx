@@ -57,7 +57,7 @@ const AdminDepositApproval = () => {
             <CardTitle>Deposit by {deposit.user.name}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p>Amount: ${deposit.amount}</p>
+            <p>Amount: ৳{deposit.amount}</p>
             <p>Method: {deposit.method}</p>
             <p>Transaction ID: {deposit.trx}</p>
             <p>Number: {deposit.user.number}</p>

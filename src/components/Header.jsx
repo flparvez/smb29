@@ -1,10 +1,51 @@
 "use client"
+import axios from "axios";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
 
 
 export default function HeaderNavbar() {
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const { data: session, status } = useSession();
   const [isBalanceVisible, setIsBalanceVisible] = useState(false);
+
+    // Fetch user data by session ID
+    const fetchUserData = useCallback(async () => {
+      if (status === "loading") return; // Session loading হলে কিছু করবে না
+  
+      if (!session?.user?.id) {
+        setError("User not found");
+        setLoading(false);
+        return;
+      }
+  
+      try {
+        setLoading(true);
+        const { data } = await axios.get(`/api/auth/user?id=${session.user.id}`);
+        setUserData(data);
+        setError("");
+      } catch (err) {
+        console.error("Failed to fetch user data:", err);
+        setError("Failed to load user data");
+        toast.error("Could not load user details");
+      } finally {
+        setLoading(false);
+      }
+    }, [session, status]);
+  
+    useEffect(() => {
+      fetchUserData();
+    }, [fetchUserData]);
+  
+    // Show loading or error message
+    if (loading) return <p>Loading user data...</p>;
+    if (error) return <p className="text-red-500">{error}</p>;
+  
 
   // Toggle balance visibility
   const toggleBalance = () => {
@@ -22,14 +63,14 @@ export default function HeaderNavbar() {
 
         <div className="flex flex-col items-start">
           {/* Name */}
-          <span className="text-white text-xl mb-1">John Doe</span>
+          <span className="text-white text-xl mb-1">{userData?.name}</span>
 
           {/* Toggle Button: "Tap to Balance" */}
           <button 
             onClick={toggleBalance} 
             className="bg-[#fff]  text-sm px-1 text-[#444] rounded-full cursor-pointer flex items-center gap-1"
           >
-            {isBalanceVisible ? "Balance: $100" : <div className=" flex items-center gap-1"> <Image
+            {isBalanceVisible ? <p className="font-bold">balance ৳ {userData?.balance} </p> : <div className=" flex items-center gap-1"><Image
                     src="/tap.webp" width={20} height={20} alt="" className="h-4 rounded-full w-4" /> <span id="textContent">Tap for Balance</span> 
                     </div>}
           </button>
@@ -38,10 +79,11 @@ export default function HeaderNavbar() {
 
       {/* Right Side: Logout Icon */}
       <div className="flex items-center">
-        <button 
+        <button  onClick={() => signOut()}
           className="rounded-full bg-white absolute top-3 right-3 p-2"
           aria-label="Logout"
         >
+          
        <svg xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
             className="h-6 font-bold cursor-pointer w-6 text-black">

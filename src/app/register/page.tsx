@@ -1,7 +1,11 @@
+"use client"
 import RegisterPage from '@/components/RegisterPage'
+
 import React from 'react'
 
-const page = () => {
+const Register = () => {
+    
+    
   return (
     <div>
       <RegisterPage />
@@ -9,4 +13,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Register

@@ -1,7 +1,11 @@
+"use client"
 import LoginPage from '@/components/LoginPage'
+
 import React from 'react'
 
 const Login = () => {
+
+
   return (
     <div>
       <LoginPage />
