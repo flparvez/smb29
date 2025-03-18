@@ -19,7 +19,7 @@ const userSchema = new Schema<IUser>(
   {
     name : { type: String, required: true },
     number : { type: Number, required: true },
-    balance : { type: Number, required: true, default: 100 },
+    balance : { type: Number,  default: 100 },
     ads: { type: Boolean, default: false },
     admin: { type: Boolean, default: false },
 

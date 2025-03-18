@@ -1,12 +1,10 @@
-import UserDetails from "@/components/UserDetails";
-import Link from "next/link";
+import Homepage from "@/components/Homepage";
+
 
 export default function Home() {
   return (
     <div>
-<h2>This is home page</h2>
-<Link href="/login">Login</Link>
-<UserDetails />
+<Homepage />
     </div>
   );
 }

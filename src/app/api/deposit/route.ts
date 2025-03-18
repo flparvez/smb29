@@ -37,14 +37,15 @@ export const POST = async (req: NextRequest) => {
 // --- PATCH: Approve deposit & update user balance ---
 export const PATCH = async (req: NextRequest) => {
   try {
-    const { depositId } = await req.json();
+    const { searchParams } = new URL(req.url);  
+    const id = searchParams.get('id');
 
-    if (!depositId || !mongoose.Types.ObjectId.isValid(depositId)) {
-      return new NextResponse(JSON.stringify({ error: "Invalid deposit ID" }), { status: 400 });
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return new NextResponse(JSON.stringify({ error: "Invalid deposit ID" }), { status: 403 });
     }
 
     await connectToDb();
-    const deposit = await Deposit.findById(depositId).populate("user");
+    const deposit = await Deposit.findById(id).populate("user");
     if (!deposit || deposit.approved) {
       return new NextResponse(JSON.stringify({ error: "Invalid or already approved deposit" }), { status: 400 });
     }
@@ -61,6 +62,7 @@ export const PATCH = async (req: NextRequest) => {
     return new NextResponse(JSON.stringify({ message: "Deposit approved successfully", user }), { status: 200 });
   } catch (error) {
     console.error("Error approving deposit:", error);
+    console.log(error)
     return new NextResponse(JSON.stringify({ error: `Deposit approval failed: ${error}` }), { status: 500 });
   }
 };
