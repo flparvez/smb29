@@ -79,7 +79,7 @@ export const GET = async () => {
         await connectToDb();
     
         // Get all plans created by the user
-        const plans = await Plan.find()
+        const plans = await Plan.find().populate("user");
     
         return new NextResponse(JSON.stringify({ plans }), { status: 200 });
     } catch (error) {

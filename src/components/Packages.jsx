@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 
 
 const Packages = () => {
-    const { data: session } = useSession();
+    const { data: session,status } = useSession();
       const [userData, setUserData] = useState(null);
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState("");
@@ -35,7 +35,7 @@ const Packages = () => {
       } finally {
         setLoading(false);
       }
-    }, [session]);
+    }, [session,status]);
   
     useEffect(() => {
       fetchUserData();
@@ -112,8 +112,9 @@ const Packages = () => {
 
       if (response.status === 200) {
         toast.success('Plan purchased successfully!');
-        router.push('/user/dashboard');
+       
       }
+      router.push('/user/dashboard');
     } catch (error) {
       console.error('Error purchasing plan:', error);
       toast.error('Failed to purchase the plan!');
