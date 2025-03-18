@@ -3,19 +3,23 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useNotification } from "@/components/notification";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 
 import Image from "next/image";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
-const [number, setNumber] = useState("");
+  const [number, setNumber] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
-  const { showNotification } = useNotification();
+
+
+     const router = useRouter();
+
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,9 +30,9 @@ const [number, setNumber] = useState("");
     });
 
     if (result?.error) {
-      showNotification(result.error, "error");
+      toast.error(result.error, );
     } else {
-      showNotification("Login successful!", "success");
+      toast.success("Login successful!");
       router.push("/");
     }
   };
@@ -38,7 +42,7 @@ const [number, setNumber] = useState("");
         {/* Logo */}
         <div className="relative w-24 h-24 mx-auto -top-12 border-4 border-green-500 rounded-full bg-white shadow-lg">
           <Image
-            src="/logo1.webp"
+            src="/logo1.jpg"
             alt="logo"
             layout="fill"
             className="rounded-full object-cover"

@@ -2,12 +2,13 @@
 
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import { useNotification } from './notification';
+
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 const PaymentPage = () => {
 const [trx, setTrx] = useState("");
-const { showNotification } = useNotification();
+
 const router = useRouter();
 const [selectedAmount, setSelectedAmount] = useState(null);
 const [selectedMethod, setSelectedMethod] = useState(null);
@@ -37,13 +38,10 @@ const handleSubmit = async (e) => {
       throw new Error(data.error || "Registration failed");
     }
 
-    showNotification("Deposit Succesfully! .", "success");
+    toast.success("Deposit Succesfully! . Your balance will be updated within few minutes.");
     router.push("/user/dashboard");
   } catch (error) {
-    showNotification(
-      error instanceof Error ? error.message : "Deposit failed",
-      "error"
-    );
+toast.error("Deposit Failed",error.message);
   }
 };
   return (

@@ -1,10 +1,11 @@
-import Homepage from "@/components/Homepage";
+
+import LoginPage from "@/components/LoginPage";
 
 
 export default function Home() {
   return (
     <div>
-<Homepage />
+<LoginPage />
     </div>
   );
 }

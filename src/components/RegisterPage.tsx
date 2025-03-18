@@ -1,11 +1,12 @@
 "use client"
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useNotification } from "@/components/notification";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function RegisterPage() {
 
@@ -16,13 +17,13 @@ export default function RegisterPage() {
   const [refer, setRefer] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const router = useRouter();
-  const { showNotification } = useNotification();
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      showNotification("Passwords do not match", "error");
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -41,13 +42,11 @@ export default function RegisterPage() {
        
       }
 
-      showNotification("Registration successful! Please log in.", "success");
+      toast.success("Registration successful! Please log in.");
       router.push("/login");
     } catch (error) {
-      showNotification(
-        error instanceof Error ? error.message : "Registration failed",
-        "error"
-      );
+      console.log(error)
+ toast.error("Registration failed");
     }
   };
 
@@ -58,7 +57,7 @@ export default function RegisterPage() {
         {/* Logo */}
         <div className="relative w-24 h-24 mx-auto -top-12 border-4 border-green-500 rounded-full bg-white shadow-lg">
           <Image
-            src="/logo1.webp"
+            src="/logo1.jpg"
             alt="logo"
             layout="fill"
             className="rounded-full object-cover"
