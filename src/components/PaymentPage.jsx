@@ -65,13 +65,25 @@ toast.error("Deposit Failed",error.message);
             
     </div>
     <div className=" m-5 p-4 bg-white rounded-lg py-5 shadow whitespace-nowrap">
+
         <div className="flex gap-1 items-center">
             <Image src="/nagad.png" width={100} height={100} alt="" className="-ml-[2px] h-7 w-7" />
           
             <h2 className=" text-lg ">Nagad: </h2>
-            <h3 className="text-lg" id="p2">01782633894</h3>
+            <h3 className="text-lg" id="p2">01905485427</h3>
              <div><span className="bg-[#15A710] rounded-lg cursor-pointer px-3 text-white text-sm" >Copy</span></div>
         </div>
+
+    <div className="flex gap-1 mt-2 items-center">
+            <Image src="/bkash.png" width={100} height={100} alt="" className="-ml-[2px] h-7 w-7" />
+          
+            <h2 className=" text-lg ">Bkash: </h2>
+            <h3 className="text-lg" id="p2">01905485427</h3>
+             <div><span className="bg-[#15A710] rounded-lg cursor-pointer px-3 text-white text-sm" >Copy</span></div>
+        </div>
+
+
+
         <div className="flex items-center gap-1 mt-5">
   <Image width={100} height={100}  src="/amount.jpg" alt="" className="-ml-[2px] h-7 w-7" />
 

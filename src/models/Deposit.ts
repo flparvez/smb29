@@ -3,6 +3,7 @@ import mongoose, { model, models, Schema } from "mongoose";
 export interface IDeposit {
   amount: number;
   method: string;
+  
   trx: string;
   approved?: boolean;
   user: {
