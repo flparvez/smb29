@@ -1,30 +1,19 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
-export interface IAds {
-    name: string;
-    ads_link: string;
-    _id?: mongoose.Types.ObjectId;
-  
-      user: {
-        _id: mongoose.Types.ObjectId;
-        name: string;
-        number: string;
-        ads: boolean;
-      
-        
-      }
+// Define Ads Interface
+export interface IAds extends Document {
+  name: string;
+  ads_link: string;
+  user: mongoose.Types.ObjectId;
 }
 
-const AdsSchema = new Schema<IAds>({
-    name: { type: String, required: true },
-    ads_link: { type: String, required: true },
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: 'User', // Link to the User model
-      required: true,
-    },
-  });
-  
-  const Ads = mongoose.models.Ads || mongoose.model<IAds>("Ads", AdsSchema);
-  
-  export default Ads;
+// Define Ads Schema
+const AdsSchema: Schema = new Schema({
+  name: { type: String, required: true },
+  ads_link: { type: String, required: true },
+  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+});
+
+const Ads = mongoose.models.Ads || mongoose.model<IAds>("Ads", AdsSchema);
+
+export default Ads;
