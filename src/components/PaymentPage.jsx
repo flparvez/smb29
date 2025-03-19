@@ -39,7 +39,7 @@ const handleSubmit = async (e) => {
     }
 
     toast.success("Deposit Succesfully! . Your balance will be updated within few minutes.");
-    router.push("/user/dashboard");
+    router.push("/user/deposits");
   } catch (error) {
 toast.error("Deposit Failed",error.message);
   }
