@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import toast from 'react-hot-toast'
 
 const Withdraw = () => {
   const [amount, setAmount] = useState('')
@@ -27,12 +28,14 @@ const Withdraw = () => {
       const data = await res.json()
 
       if (res.ok) {
+        toast.success("✅ উইথড্র সফল হয়েছে!")
         setSuccess('✅ উইথড্র সফল হয়েছে!')
         setError('')
         setAmount('')
         setPmethod('')
         setNumber('')
       } else {
+        toast.error(error)
         setError(data.message || '❌ কিছু একটা সমস্যা হয়েছে!')
         setSuccess('')
       }
