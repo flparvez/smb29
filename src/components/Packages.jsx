@@ -13,6 +13,36 @@ const Packages = () => {
       const [error, setError] = useState("");
      
       const router = useRouter();
+
+
+      const [myplan, setPlans] = useState("");
+      
+       // Fetch user data by session ID
+       const fetchPlans = useCallback(async () => {
+        
+   
+    
+            const { data } = await axios.get(`/api/save-plan`);
+            if (Array.isArray(data?.plans)) {
+              setPlans(data?.plans.filter((d) => d.user._id === session?.user?.id));
+            }
+  
+          //   filter deposit data by user id
+          
+  
+  
+       },[session])
+      
+        useEffect(() => {
+          fetchPlans();
+        }, [fetchPlans]);
+   
+
+
+
+console.log(myplan[0]?.title)
+
+
         // Fetch user data by session ID
     const fetchUserData = useCallback(async () => {
       if (status === "loading") return; // Session loading
@@ -149,12 +179,23 @@ const Packages = () => {
                 </svg> Validity {item.validity} days
               </p>
             </div>
-            <button
+           
+         {
+  myplan && myplan.some((m) => m?.title === item?.title) ? (
+    <span  className="buyBtn align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-2 px-4 shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none block w-full bg-[#0f9b0f] text-white mt-4 border shadow-none rounded-lg" >
+      Current
+    </span>
+  ) : (
+    <button
               className="buyBtn align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-2 px-4 shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none block w-full bg-[#0f9b0f] text-white mt-4 border shadow-none rounded-lg"
               onClick={() => handleBuyNow(item)} // Pass the plan data to handleBuyNow
             >
-              Buy now
-            </button>
+      Buy Now
+    </button>
+  )
+} 
+              
+            
           </div>
         </div>
       ))}
