@@ -12,7 +12,7 @@ const Task = () => {
   const fetchAds = useCallback(async () => {
     try {
       const { data } = await axios.get("/api/ads");
-      setAds(data);
+      setAds(data?.ads);
     } catch (error) {
       console.error("Failed to fetch ads:", error);
     }
@@ -34,7 +34,7 @@ const Task = () => {
                 <th className="p-2 border border-gray-300">#</th>
                 <th className="p-2 border border-gray-300">Ad Name</th>
                 <th className="p-2 border border-gray-300">Ad Link</th>
-                <th className="p-2 border border-gray-300">Action</th>
+                
               </tr>
             </thead>
             <tbody>
@@ -58,11 +58,7 @@ const Task = () => {
                       ads {index + 1}
                     </Link>
                   </td>
-                  <td className="p-2 text-center border border-gray-300">
-                    <button className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition">
-                      ❌ Delete
-                    </button>
-                  </td>
+            
                 </tr>
               ))}
             </tbody>

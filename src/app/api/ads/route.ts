@@ -57,11 +57,11 @@ export const POST = async (req: NextRequest) => {
 export const GET = async () => {
   try {
     const session = await getServerSession(authOptions);
-    // if (!session) {
-    //   return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
-    //     status: 401,
-    //   });
-    // }
+    if (!session) {
+      return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
 
     await connectToDb();
 
