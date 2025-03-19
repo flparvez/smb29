@@ -32,6 +32,6 @@ const withdrawSchema = new Schema<IWithdraw>({
 
 })
 
-const Withdraw = models?.Withdraw || model<IWithdraw>("Plan", withdrawSchema);
+const Withdraw = models?.Withdraw || model<IWithdraw>("Withdraw", withdrawSchema);
 
 export default Withdraw;

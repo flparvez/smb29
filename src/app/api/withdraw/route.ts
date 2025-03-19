@@ -25,7 +25,7 @@ export const POST = async (req: NextRequest) => {
     }
 
     // Check minimum withdrawal amount
-    if (body.amount < 500) {
+    if (body.amount < user.balance) {
       return NextResponse.json({ message: "মিনিমাম উইথড্র 500 টাকা।" }, { status: 400 });
     }
 
@@ -36,14 +36,14 @@ export const POST = async (req: NextRequest) => {
 
     // Create the withdrawal request
     const withdrawData = { ...body, user: session.user.id, approved: false };
-    const withdraw = await Withdraw.create(withdrawData);
+    const withdrawd = await Withdraw.create(withdrawData);
 
     // Deduct the balance from the user
     user.balance -= body.amount;
     await user.save();
 
     return new NextResponse(
-      JSON.stringify({ message: "Withdraw request submitted. Awaiting approval.", withdraw }),
+      JSON.stringify({ message: "Withdraw request submitted. Awaiting approval.", withdrawd }),
       { status: 201 }
     );
   } catch (error) {
