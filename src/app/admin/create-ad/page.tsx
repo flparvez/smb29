@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 const CreateAd = () => {
@@ -30,6 +31,7 @@ const CreateAd = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 ">
+      <Link href="/admin" className="text-2xl font-bold mb-16">Admin</Link>
       <h1 className="text-2xl font-bold mb-16">Create New Ad</h1>
 
       <form

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import Link from "next/link";
 
 interface Deposit {
   _id: string;
@@ -51,6 +52,8 @@ const AdminDepositApproval = () => {
 
   return (
     <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+<Link href="/admin" className="text-2xl font-bold mb-16">Admin</Link>
       {deposits.map((deposit) => (
         <Card key={deposit._id} className="shadow-lg">
           <CardHeader>

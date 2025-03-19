@@ -4,6 +4,7 @@ import { connectToDb } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import Withdraw from "@/models/Withdraw";
 import User from "@/models/User";
+import mongoose from "mongoose";
 
 // POST API route for withdrawal
 export const POST = async (req: NextRequest) => {
@@ -47,5 +48,49 @@ export const POST = async (req: NextRequest) => {
   } catch (error) {
     console.error("Error creating withdrawal:", error);
     return NextResponse.json({ error: `⚠️ উইথড্রাল ফেইল্ড: ${error}` }, { status: 500 });
+  }
+};
+
+
+
+
+
+// --- PATCH: Approve Withdraw & update user balance ---
+export const PATCH = async (req: NextRequest) => {
+  try {
+    const { searchParams } = new URL(req.url);  
+    const id = searchParams.get('id');
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return new NextResponse(JSON.stringify({ error: "Invalid withdraw ID" }), { status: 403 });
+    }
+
+    await connectToDb();
+    const withdraw = await Withdraw.findById(id).populate("user");
+    if (!withdraw || withdraw.approved) {
+      return new NextResponse(JSON.stringify({ error: "Invalid or already approved deposit" }), { status: 400 });
+    }
+
+    withdraw.approved = true;
+    await withdraw.save();
+
+    
+    return new NextResponse(JSON.stringify({ message: "withdraw approved successfully", withdraw }), { status: 200 });
+  } catch (error) {
+    console.error("Error approving deposit:", error);
+    console.log(error)
+    return new NextResponse(JSON.stringify({ error: `withdraw approval failed: ${error}` }), { status: 500 });
+  }
+};
+
+
+//  GEt withdraw
+export const GET = async () => {
+  try {
+    await connectToDb();
+    const withdraws = await Withdraw.find({}).sort({ createdAt: -1 }).lean().populate("user");
+    return new NextResponse(JSON.stringify(withdraws), { status: 200 });
+  } catch (error) {
+    return new NextResponse(JSON.stringify({ error: "Failed to fetch withdraws: " + error }), { status: 400 });
   }
 };

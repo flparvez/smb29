@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+
+import Link from "next/link";
 
 const AdminDashboard = () => {
-  const router = useRouter();
+
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalAds: 0,
@@ -22,14 +23,13 @@ const AdminDashboard = () => {
     });
   }, []);
 
-  const goToCreateAd = () => router.push("/admin/create-ad");
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
 
+      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        {/* Cards */}
         {[
           { label: "Total Users", value: stats.totalUsers, color: "bg-blue-500" },
           { label: "Total Ads", value: stats.totalAds, color: "bg-yellow-500" },
@@ -46,13 +46,27 @@ const AdminDashboard = () => {
         ))}
       </div>
 
-      {/* Create Ad Button */}
-      <button
-        onClick={goToCreateAd}
-        className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
-      >
-        ➕ Create New Ad
-      </button>
+      {/* Action Buttons (Deposit, Withdraw, Create Ad) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <Link
+          href="/admin/deposit"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+        >
+          💰 Deposit
+        </Link>
+        <Link href="/admin/withdraw"
+          
+          className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+        >
+          💸 Withdraw
+        </Link>
+        <Link
+          href="/admin/create-ad"
+          className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
+        >
+          ➕ Create New Ad
+        </Link>
+      </div>
     </div>
   );
 };
