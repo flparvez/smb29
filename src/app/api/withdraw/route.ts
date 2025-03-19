@@ -2,8 +2,9 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth/next";
 import { connectToDb } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import Withdraw from "@/models/Withdraw";
+
 import User from "@/models/User";
+import Withdraw from "@/models/Withdraw";
 
 // POST API route for withdrawal
 export const POST = async (req: NextRequest) => {
@@ -25,7 +26,7 @@ export const POST = async (req: NextRequest) => {
     }
 
     // Check minimum withdrawal amount
-    if (body.amount < user.balance) {
+    if (body.amount < 500) {
       return NextResponse.json({ message: "মিনিমাম উইথড্র 500 টাকা।" }, { status: 400 });
     }
 
