@@ -19,17 +19,17 @@ export const POST = async (req: NextRequest) => {
     // Validate user data
     const user = await User.findById(session.user.id);
     if (!amount || !pmethod || !number) {
-      return NextResponse.json({ error: "সবগুলো ফিল্ড পূরণ করতে হবে!" }, { status: 400 });
+      return NextResponse.json({ error: "সবগুলো ফিল্ড পূরণ করতে হবে!" }, { status: 401 });
     }
 
     // Check minimum withdrawal amount
     if (amount < 500) {
-      return NextResponse.json({ message: "মিনিমাম উইথড্র 500 টাকা।" }, { status: 400 });
+      return NextResponse.json({ message: "মিনিমাম উইথড্র 500 টাকা।" }, { status: 402 });
     }
 
     // Ensure user has enough balance
     if (amount > user.balance) {
-      return NextResponse.json({ message: "আপনার ব্যালেন্স যথেষ্ট নয়।" }, { status: 400 });
+      return NextResponse.json({ message: "আপনার ব্যালেন্স যথেষ্ট নয়।" }, { status: 403 });
     }
 
     // Create the withdrawal request

@@ -20,11 +20,12 @@ const Withdraw = () => {
       const res = await fetch("/api/withdraw", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount, pmethod, number }),
+        body: JSON.stringify({ amount:amount, pmethod:pmethod, number:number }),
+        
       });
 
       const data = await res.json();
-
+console.log(data)
       if (res.ok) {
         toast.success("✅ উইথড্র সফল হয়েছে!");
         setAmount("");

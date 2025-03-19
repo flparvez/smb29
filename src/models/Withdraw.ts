@@ -1,8 +1,7 @@
 import mongoose, { model, models, Schema } from "mongoose";
 
 export interface IWithdraw {
-  id: number;
-  number: string; // Changed to string
+  number: number; 
   pmethod: string;
   user: {
     _id: mongoose.Types.ObjectId;
@@ -18,10 +17,9 @@ export interface IWithdraw {
 
 const withdrawSchema = new Schema<IWithdraw>(
   {
-    id: { type: Number, required: true },
-    number: { type: String, required: true }, // Fixed to string
+  number: { type: Number, required: true },
     pmethod: { type: String, required: true },
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true }, // Linked to User model
+    user: { type: Schema.Types.ObjectId, ref: "User",  }, // Linked to User model
     approved: { type: Boolean, default: false },
     amount: { type: Number, required: true },
   },
