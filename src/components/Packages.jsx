@@ -21,14 +21,10 @@ const Packages = () => {
        const fetchPlans = useCallback(async () => {
         
    
-    
             const { data } = await axios.get(`/api/save-plan`);
             if (Array.isArray(data?.plans)) {
               setPlans(data?.plans.filter((d) => d.user._id === session?.user?.id));
             }
-  
-          //   filter deposit data by user id
-          
   
   
        },[session])

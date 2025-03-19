@@ -1,13 +1,78 @@
-import Link from 'next/link'
-import React from 'react'
+"use client";
+
+import { IAds } from "@/models/Ads";
+import axios from "axios";
+import Link from "next/link";
+import { useEffect, useState, useCallback } from "react";
 
 const Task = () => {
-  return (
-    <div>
-            <Link className='text-[#7baa1b] text-xl  font-extrabold ml-6 mt-4' href="/user/dashboard">Go Dashboard</Link>
-      <h2>Task Page</h2>
-    </div>
-  )
-}
+  const [ads, setAds] = useState([]);
 
-export default Task
+  // Fetch ads data
+  const fetchAds = useCallback(async () => {
+    try {
+      const { data } = await axios.get("/api/ads");
+      setAds(data);
+    } catch (error) {
+      console.error("Failed to fetch ads:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchAds();
+  }, [fetchAds]);
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-4">
+      <h1 className="text-2xl font-bold mb-4 text-center">📌 All Ads</h1>
+
+      {ads.length > 0 ? (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse border border-gray-200">
+            <thead className="bg-blue-500 text-white">
+              <tr>
+                <th className="p-2 border border-gray-300">#</th>
+                <th className="p-2 border border-gray-300">Ad Name</th>
+                <th className="p-2 border border-gray-300">Ad Link</th>
+                <th className="p-2 border border-gray-300">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ads.map((ad: IAds, index: number) => (
+                <tr
+                  key={ad._id}
+                  className="hover:bg-gray-100 transition duration-200"
+                >
+                  <td className="p-2 text-center border border-gray-300">
+                    {index + 1}
+                  </td>
+                  <td className="p-2 text-center border border-gray-300">
+                    {ad.name}
+                  </td>
+                  <td className="p-2 text-center border border-gray-300">
+                    <Link
+                      href={ad.ads_link}
+                      target="_blank"
+                      className="text-blue-500 hover:underline"
+                    >
+                      ads {index + 1}
+                    </Link>
+                  </td>
+                  <td className="p-2 text-center border border-gray-300">
+                    <button className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition">
+                      ❌ Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="text-center text-gray-500 mt-6">No Ads Found 🥲</p>
+      )}
+    </div>
+  );
+};
+
+export default Task;

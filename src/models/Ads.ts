@@ -3,6 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 // Define Ads Interface
 export interface IAds extends Document {
   name: string;
+  _id: string;
   ads_link: string;
   user: mongoose.Types.ObjectId;
 }
