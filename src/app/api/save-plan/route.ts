@@ -53,6 +53,8 @@ export const POST = async (req: NextRequest) => {
 
     // Decrease plan price from user's balance
     user.balance -= price;
+    user.ads = true
+    user.dailyLimit = dailyAds
     await user.save();
 
     // Return success response
