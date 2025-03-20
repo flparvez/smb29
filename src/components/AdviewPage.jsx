@@ -11,7 +11,7 @@ const AdviewPage = ({id}) => {
   useEffect(() => {
     const fetchAd = async () => {
       try {
-        const { data } = await axios.get(`api/ads/ad?id=${id}`);
+        const { data } = await axios.get(`https://smb29.vercel.app/api/ads/ad?id=${id}`);
         if (data.ads && data.ads.length > 0) {
           const foundAd = data
           if (foundAd) {
