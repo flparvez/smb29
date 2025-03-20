@@ -4,8 +4,10 @@ import { connectToDb } from "@/lib/db";
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 import Ads from "@/models/Ads";
-export const GET = async (req: NextRequest, { params }: { params: { id: string } }) => {
+export const GET = async (req: NextRequest) => {
     try {
+      const { searchParams } = new URL(req.url);
+      const id = searchParams.get('id');
       const session = await getServerSession(authOptions);
       if (!session) {
         return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
@@ -42,7 +44,7 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
       }
   
       // ✅ Get the ad by ID
-      const { id } = params;
+   
       const ad = await Ads.findById(id);
   
       if (!ad) {
@@ -53,6 +55,7 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
   
       // ✅ Increment user's ad watched count
       user.adsWatchedToday += 1;
+      user.balance += 100;
       await user.save();
   
       return new NextResponse(JSON.stringify({ ad, message: "Ad viewed successfully!" }), { status: 200 });
