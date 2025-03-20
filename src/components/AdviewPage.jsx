@@ -75,13 +75,13 @@ const AdViewPage = ({id}) => {
                   <h2 className="text-xl font-semibold mb-2">{ad.name}</h2>
 
                   {/* 🖼️ Ad Image */}
-                  {ad.image && (
+                  
                     <img
                       src={"https://i.ibb.co.com/hR1n9GtC/image.png"}
                       alt="Ad banner"
                       className="w-full h-48 object-cover rounded-md mb-2"
                     />
-                  )}
+                  
 
                   <a
                     href={ad.ads_link}
