@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 const AdViewPage = ({id}) => {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
-  const [ad, setAd] = useState<any>(null);
+  const [ad, setAd] = useState(null);
   const [error, setError] = useState("");
   const router = useRouter();
 
