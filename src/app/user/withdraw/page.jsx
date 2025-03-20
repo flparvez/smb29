@@ -1,12 +1,38 @@
 "use client";
-import { useState } from "react";
+import getUserData from "@/lib/getUserData";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const Withdraw = () => {
   const [amount, setAmount] = useState("");
   const [pmethod, setPmethod] = useState("");
   const [number, setNumber] = useState("");
-  const [balance, setBalance] = useState(100);
+
+  const { data: session, status } = useSession();
+  const [userData, setUserData] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (status === "authenticated" && session?.user?.id) {
+        try {
+          const data = await getUserData(session?.user.id);
+          setUserData(data);
+        } catch (err) {
+          setError(err.message);
+        }
+      }
+    };
+
+    fetchData();
+  }, [session, status]);
+
+  if (error) return <p className="text-red-500">{error}</p>;
+  if (!userData) return <p>Loading user data...</p>;
+
+ 
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,19 +51,19 @@ const Withdraw = () => {
       });
 
       const data = await res.json();
-console.log(data)
+
       if (res.ok) {
         toast.success("✅ উইথড্র সফল হয়েছে!");
         setAmount("");
         setPmethod("");
         setNumber("");
-        setBalance((prevBalance) => prevBalance - parseInt(amount)); // Balance update
+       
       } else {
-        toast.error(data.message || "❌ কিছু একটা সমস্যা হয়েছে!");
+        toast.error(data.message || " কিছু একটা সমস্যা হয়েছে!");
       }
     } catch (err) {
       console.log(err);
-      toast.error("❌ সার্ভারের সাথে সংযোগ স্থাপন করা যায়নি!");
+      toast.error(" সার্ভারের সাথে সংযোগ স্থাপন করা যায়নি!");
     }
   };
 
@@ -49,7 +75,7 @@ console.log(data)
 
       <div className="flex gap-3 items-center justify-center m-5 p-4 bg-white rounded-lg py-5 shadow">
         <h2 className="text-xl">Balance:</h2>
-        <h2 className="text-[#0c0ce8] text-xl font-bold">{balance} Taka</h2>
+        <h2 className="text-[#0c0ce8] text-xl font-bold">{userData?.balance} Taka</h2>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center m-5 p-4 bg-white rounded-lg py-5 shadow">

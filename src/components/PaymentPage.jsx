@@ -87,7 +87,7 @@ toast.error("Deposit Failed",error.message);
         <div className="flex items-center gap-1 mt-5">
   <Image width={100} height={100}  src="/amount.jpg" alt="" className="-ml-[2px] h-7 w-7" />
 
-            <h2 className="text-xl " id="p1">Amount: 5000 Taka</h2> <span
+            <h2 className="text-xl " id="p1">Amount: {selectedAmount} Taka</h2> <span
                 className="bg-[#15A710] rounded-lg cursor-pointer px-3 text-white text-sm" >Copy</span>
         </div>
     </div>
