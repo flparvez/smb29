@@ -51,7 +51,7 @@ const Task = () => {
                   </td>
                   <td className="p-2 text-center border border-gray-300">
                     <Link
-                      href={ad.ads_link}
+                      href={`/user/ptc/${ad._id}`} 
                       target="_blank"
                       className="text-blue-500 hover:underline"
                     >
