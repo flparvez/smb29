@@ -4,10 +4,13 @@ import { getServerSession } from "next-auth/next";
 import { connectToDb } from "@/lib/db";
 import User from "@/models/User";
 import Ads from "@/models/Ads";
-import {  NextResponse } from "next/server";
+import {  NextRequest, NextResponse } from "next/server";
 
-export const GET = async () => {
+export const GET = async (req:NextRequest) => {
   try {
+
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
     const session = await getServerSession(authOptions);
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -37,14 +40,16 @@ export const GET = async () => {
       );
     }
 
-    // Fetch ads (randomized)
-    const ads = await Ads.aggregate([{ $sample: { size: user.dailyLimit } }]);
+    const ad = await Ads.findById(id);
+    if (!ad) {
+      return NextResponse.json({ error: "Ad not found" }, { status: 404 });
+    } 
 
     // Increment ads watched count
     user.adsWatchedToday += 1;
     await user.save();
 
-    return NextResponse.json({ ads }, { status: 200 });
+    return NextResponse.json({ ad }, { status: 200 });
   } catch (error) {
     console.error("Error fetching ads:", error);
     return NextResponse.json(
