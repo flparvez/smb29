@@ -42,7 +42,7 @@ const AdViewPage = ({id}) => {
     };
 
     fetchAd();
-  }, [params.id]);
+  }, [id]);
 
   // ✅ Handle Ad Completion
   const handleAdCompletion = () => {
