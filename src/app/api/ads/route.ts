@@ -85,7 +85,8 @@ export const GET = async () => {
       return new NextResponse(
         JSON.stringify({
           error: "You've reached your daily ad limit! Come back tomorrow!",
-        }),
+        }
+        ),
         { status: 403 }
       );
     }

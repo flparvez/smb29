@@ -5,8 +5,10 @@ import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 
+
 const Task = () => {
   const [ads, setAds] = useState([]);
+
 
   // Fetch ads data
   const fetchAds = useCallback(async () => {
@@ -14,6 +16,7 @@ const Task = () => {
       const { data } = await axios.get("/api/ads");
       setAds(data?.ads);
     } catch (error) {
+    
       console.error("Failed to fetch ads:", error);
     }
   }, []);
@@ -24,7 +27,7 @@ const Task = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">📌 All Ads</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center"> All Ads</h1>
 
       {ads.length > 0 ? (
         <div className="overflow-x-auto">

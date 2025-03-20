@@ -25,3 +25,4 @@ export const GET = async (req: NextRequest) => {
     return new NextResponse(JSON.stringify({ error: `Failed to fetch user: ${error}` }), { status: 500 });
   }
 }
+
