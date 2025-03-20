@@ -54,12 +54,12 @@ const router = useRouter();
       const data = await res.json();
 
       if (res.ok) {
-        toast.success("✅ উইথড্র সফল হয়েছে!");
+        toast.success(`✅ উইথড্র সফল হয়েছে! ${number} Taka প্রদান করা হয়েছে!`);
         
         setAmount("");
         setPmethod("");
         setNumber("");
-        router.push("/user/transactionss");
+        router.push("/user/transactions");
        
       } else {
         toast.error(data.message || " কিছু একটা সমস্যা হয়েছে!");
