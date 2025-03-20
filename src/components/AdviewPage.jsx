@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const AdViewPage = ({id}) => {
   const [loading, setLoading] = useState(true);
@@ -47,7 +48,7 @@ const AdViewPage = ({id}) => {
 
   // ✅ Handle Ad Completion
   const handleAdCompletion = () => {
-    alert("✅ Ad viewed successfully!");
+    toast.success("✅ Ad viewed successfully!");
     router.push("/user/dashboard");
   };
 
@@ -76,7 +77,7 @@ const AdViewPage = ({id}) => {
                   {/* 🖼️ Ad Image */}
                   {ad.image && (
                     <img
-                      src={"https://smb29.vercel.app/_next/image?url=%2Fbanner.webp"}
+                      src={"https://i.ibb.co.com/hR1n9GtC/image.png"}
                       alt="Ad banner"
                       className="w-full h-48 object-cover rounded-md mb-2"
                     />

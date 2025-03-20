@@ -45,6 +45,6 @@ export async function POST(request: NextRequest){
 export async function GET(){
     connectToDb()
 
-    const user = await User.find();
+    const user = await User.find().sort({createdAt:-1}).lean();
     return NextResponse.json({user})
 }

@@ -49,7 +49,22 @@ const AdminDepositApproval = () => {
   return (
     
     <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Link href="/admin" className="text-2xl font-bold mb-16">Admin</Link>
+                <Link href="/admin" className="h-14 w-full bg-[#0c0ce8] pl-4 gap-5 shadow text-white flex items-center">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        aria-hidden="true"
+        className="h-7 font-bold cursor-pointer w-7"
+      >
+        <path
+          fillRule="evenodd"
+          d="M7.72 12.53a.75.75 0 010-1.06l7.5-7.5a.75.75 0 111.06 1.06L9.31 12l6.97 6.97a.75.75 0 11-1.06 1.06l-7.5-7.5z"
+          clipRule="evenodd"
+        ></path>
+      </svg>
+      <h2 className="text-xl font-bold">Withdraw</h2>
+    </Link>
       {withdraw?.map((withdraw) => (
         <Card key={withdraw._id} className="shadow-lg">
           <CardHeader>
@@ -61,7 +76,16 @@ const AdminDepositApproval = () => {
           
             <p className="text-xl">Payment Number: 0{withdraw?.number}</p>
             <p>Status: {withdraw.approved ? "✅ Approved" : "⏳ Pending"}</p>
-
+            <p className="text-gray-500 text-sm font-bold">
+              {new Date(withdraw?.createdAt).toLocaleString("en-GB", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+              })}
+            </p>
             {!withdraw.approved && (
               <Button
                 className="mt-2 bg-green-500 hover:bg-green-600"

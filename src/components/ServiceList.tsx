@@ -12,7 +12,7 @@ export default function ResponsiveItems() {
     { image: "/profile.webp",text: "Profile", link:"/profile-setting" },
     { image: "/transaction.webp",text: "transaction", link:"/transactions" },
     { image: "/refer.webp",text: "Refer", link:"/referred-users" },
-    { image: "/helpline.webp",text: "helpline", link:"/" },
+    { image: "/helpline.webp",text: "helpline", link:"/helpline" },
   
   ];
 
