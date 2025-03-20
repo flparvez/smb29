@@ -16,10 +16,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: {
     template: "%s - SMB29",
-    default: "SMB29 - Best Ptc Site In Bangladesh",
+    default: "SMB29 PTC SITE",
   },
   description: "SMB29 - Best Ptc Site In Bangladesh",
-  keywords:['SMB29','ptc site bd'],
+  keywords:['SMB29','ptc site bd', 'smb29 ptc'],
   verification:{
     other:{
       "google-site-verification": "ZEjE-cLJCoXI1DyyLXq-ErqHg540Nq9mlZO3cq1A2Bs",
