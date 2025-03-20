@@ -30,7 +30,7 @@ const userSchema = new Schema<IUser>(
     ads: { type: Boolean, default: false }, // User Plan status
     admin: { type: Boolean, default: false }, // Admin status
 
-    dailyLimit: { type: Number, default: 5 }, // Default daily limit
+    dailyLimit: { type: Number, default: 0 }, // Default daily limit
     adsWatchedToday: { type: Number, default: 0 }, // Count reset daily
 
     referredBy: { type: Schema.Types.ObjectId, ref: "User" }, // Reference to referrer
