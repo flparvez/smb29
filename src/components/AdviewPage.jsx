@@ -97,7 +97,8 @@ const AdViewPage = ({ id }) => {
               {/* 🎥 Ad Video */}
               <video
                 src=" https://res.cloudinary.com/dxmvrhcjx/video/upload/AQN1hTuvsdcLyz8l-T4SyUPKVcE7xjiTUTiiNaMkml-2nScXf9iQwLrO3PcUuLDLXidW0rTIagQyiRVqvk1FZ4ml_sfj3p4.mp4"
-                controls
+                
+                autoPlay={true}
                 onEnded={handleVideoEnd}
                 className="w-full h-48 object-cover rounded-md mb-2"
               />
@@ -122,9 +123,9 @@ const AdViewPage = ({ id }) => {
             >
               {submitting ? (
                 <>
-                  <span className="relative z-10">⏳ Submitting...</span>
+                  <span className="relative text-black z-10">⏳ Submitting...</span>
                   <div
-                    className="absolute top-0 left-0 h-full bg-blue-400 transition-all ease-in-out"
+                    className="absolute text-black top-0 left-0 h-full bg-blue-400 transition-all ease-in-out"
                     style={{ width: `${buttonProgress}%` }}
                   />
                 </>
