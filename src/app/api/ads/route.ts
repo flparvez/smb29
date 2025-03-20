@@ -93,9 +93,7 @@ export const GET = async () => {
     // ✅ Fetch ads (Randomized for variation)
     const ads = await Ads.aggregate([{ $sample: { size: user.dailyLimit } }]);
 
-    // ✅ Increment ads watched count
-    user.adsWatchedToday += 1;
-    await user.save();
+    
 
     return new NextResponse(JSON.stringify({ ads }), { status: 200 });
   } catch (error) {
@@ -106,3 +104,5 @@ export const GET = async () => {
     );
   }
 };
+
+
