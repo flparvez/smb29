@@ -8,7 +8,7 @@ export async function POST(request: NextRequest){
          const {name,number, password,refer} = await request.json();
          if (!number || !password ) {
             return NextResponse.json(
-                {error : " Number and Password is required"}, {status: 400}
+                {error : " Number and Password is required"}, {status: 401}
             )
          }
 
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest){
 
           if (existingUser) {
             return NextResponse.json(
-                {error : "User already exists"}, {status: 400}
+                {error : "User already exists"}, {status: 403}
             )
          }
 
