@@ -56,6 +56,7 @@ useEffect(() => {
                 <th className="p-2 border border-gray-300">Number</th>
                 <th className="p-2 border border-gray-300">Balance (৳)</th>
                 <th className="p-2 border border-gray-300">Ads Watched Today</th>
+                <th className="p-2 border border-gray-300">Daily Limits</th>
                 <th className="p-2 border border-gray-300">Created At</th>
               </tr>
             </thead>
@@ -76,6 +77,9 @@ useEffect(() => {
                   </td>
                   <td className="p-2 text-center border border-gray-300">
                     {user.adsWatchedToday}
+                  </td>
+                   <td className="p-2 text-center border border-gray-300">
+                    {user.dailyLimit}
                   </td>
                   <td className="p-2 text-center border border-gray-300 text-gray-500">
                     {new Date(user.createdAt).toLocaleDateString()}
