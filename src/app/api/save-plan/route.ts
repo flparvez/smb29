@@ -5,6 +5,7 @@ import Plan, { IPlan } from "@/models/Plan";
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/User";
 
+
 // --- POST: Create a new plan and deduct price from user balance ---
 export const POST = async (req: NextRequest) => {
   try {
@@ -92,3 +93,4 @@ export const GET = async () => {
         );
     }
 }
+

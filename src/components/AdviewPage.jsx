@@ -97,7 +97,7 @@ const AdViewPage = ({ id }) => {
               {/* 🎥 Ad Video */}
               <video
                 src=" https://res.cloudinary.com/dxmvrhcjx/video/upload/AQN1hTuvsdcLyz8l-T4SyUPKVcE7xjiTUTiiNaMkml-2nScXf9iQwLrO3PcUuLDLXidW0rTIagQyiRVqvk1FZ4ml_sfj3p4.mp4"
-                
+                controls={true}
                 autoPlay={true}
                 onEnded={handleVideoEnd}
                 className="w-full h-48 object-cover rounded-md mb-2"
