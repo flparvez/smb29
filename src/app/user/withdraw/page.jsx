@@ -1,6 +1,7 @@
 "use client";
 import getUserData from "@/lib/getUserData";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -32,7 +33,7 @@ const Withdraw = () => {
   if (!userData) return <p>Loading user data...</p>;
 
  
-
+const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,9 +55,11 @@ const Withdraw = () => {
 
       if (res.ok) {
         toast.success("✅ উইথড্র সফল হয়েছে!");
+        
         setAmount("");
         setPmethod("");
         setNumber("");
+        router.push("/user/transactionss");
        
       } else {
         toast.error(data.message || " কিছু একটা সমস্যা হয়েছে!");
