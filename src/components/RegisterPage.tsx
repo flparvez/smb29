@@ -184,8 +184,8 @@ export default function RegisterPage() {
                                     </svg>
               </div>
               <Input
-                type="number"
-                placeholder="Enter Refer (1234)"
+                type="text"
+                placeholder="Enter Refer (id)"
                 value={refer}
                 onChange={(e) => setRefer(e.target.value)}
                 className="bg-white text-black border-none focus:ring-0 w-full"

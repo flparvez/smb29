@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
         // Reward the referrer
         referrer.balance += 10; // 🎁 Reward 10 Taka
-        referrer.refer += 1; // ➕ Increment referral count
+        referrer.referc += 1; // ➕ Increment referral count
         await referrer.save();
       } else {
         return NextResponse.json(

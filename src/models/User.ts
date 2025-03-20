@@ -6,7 +6,8 @@ export interface IUser {
   name: string;
   number: number;
   balance: number;
-  refer: number;
+  refer: string;
+  referc: number;
   password: string;
   ads: boolean;
   admin: boolean;
@@ -24,7 +25,8 @@ const userSchema = new Schema<IUser>(
     name: { type: String, required: true },
     number: { type: Number, required: true, unique: true },
     balance: { type: Number, default: 100 },
-    refer: { type: Number, default: 0 }, // Total referral count
+    refer: { type: String, default: "" },
+    referc: { type: Number, default: 0 }, // Total referral count
     password: { type: String, required: true },
     ads: { type: Boolean, default: false }, // User Plan status
     admin: { type: Boolean, default: false }, // Admin status
@@ -63,7 +65,7 @@ userSchema.methods.rewardReferral = async function () {
     const referrer = await User.findById(this.referredBy);
     if (referrer) {
       referrer.balance += 10; // 🎁 Reward referrer (10 Taka Bonus)
-      referrer.refer += 1; // ➕ Increment referral count
+      referrer.referc += 1; // ➕ Increment referral count
       await referrer.save();
     }
   }
