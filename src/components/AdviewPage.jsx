@@ -27,7 +27,7 @@ const AdViewPage = ({ id }) => {
         }
 
         setAd(data.ad);
-
+console.log(ad)
         // 🎯 Simulate loader progress to 100%
         let progressInterval = setInterval(() => {
           setProgress((prev) => {
