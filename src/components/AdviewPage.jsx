@@ -48,7 +48,7 @@ const AdViewPage = ({id}) => {
   // ✅ Handle Ad Completion
   const handleAdCompletion = () => {
     alert("✅ Ad viewed successfully!");
-    router.push("/ads");
+    router.push("/user/dashboard");
   };
 
   return (
@@ -76,7 +76,7 @@ const AdViewPage = ({id}) => {
                   {/* 🖼️ Ad Image */}
                   {ad.image && (
                     <img
-                      src={"/banner.webp"}
+                      src={"https://smb29.vercel.app/_next/image?url=%2Fbanner.webp"}
                       alt="Ad banner"
                       className="w-full h-48 object-cover rounded-md mb-2"
                     />
