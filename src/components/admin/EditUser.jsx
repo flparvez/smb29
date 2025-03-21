@@ -9,10 +9,11 @@ const EditUser = ({ userId }) => {
     name: "",
     number: "",
     planStartedAt: "",
-    admin: false, // ✅ Set default as boolean
+    admin: false, // ✅ Default admin is false
     balance: 0,
     dailyLimit: 0,
   });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
@@ -51,12 +52,42 @@ const EditUser = ({ userId }) => {
     }));
   };
 
-  // ✅ Toggle Admin Status
-  const handleAdminToggle = () => {
-    setUserData((prevData) => ({
-      ...prevData,
-      admin: !prevData.admin, // 🔥 Toggle between true/false
-    }));
+  // 🔥 Admin Toggle with Password Confirmation
+  const handleAdminToggle = async () => {
+    const password = prompt("🔐 Enter Admin Confirmation Password:");
+
+    // Check if password is correct
+    if (password === "smb29p") {
+      const newAdminStatus = !userData.admin; // Toggle admin status
+      const updatedUserData = { ...userData, admin: newAdminStatus };
+
+      setUserData(updatedUserData);
+
+      try {
+        const response = await fetch(`/api/auth/register?id=${userId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedUserData),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          toast.success(
+            newAdminStatus ? "✅ Admin access granted!" : "❌ Admin access removed."
+          );
+        } else {
+          toast.error(data.error || "⚠️ Failed to update admin status.");
+        }
+      } catch (err) {
+        console.error("Error updating admin status:", err);
+        toast.error("❗ Error updating admin status.");
+      }
+    } else {
+      toast.error("🚫 Invalid password. Operation canceled.");
+    }
   };
 
   // 🛠️ Handle form submission
@@ -155,21 +186,23 @@ const EditUser = ({ userId }) => {
           />
         </div>
 
-   <div className="mb-4">
-         {
-          userData?.planStartedAt ? <h2>Plan started at: {" "}
-          {new Date(userData?.planStartedAt).toLocaleString("en-GB", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          })}</h2> : <h2 className="text-red-500"> no plan started</h2>
-         }
-        </div> 
-
-
+        <div className="mb-4">
+          {userData?.planStartedAt ? (
+            <h2>
+              Plan started at:{" "}
+              {new Date(userData?.planStartedAt).toLocaleString("en-GB", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+              })}
+            </h2>
+          ) : (
+            <h2 className="text-red-500">No plan started</h2>
+          )}
+        </div>
 
         {/* 🔥 Admin Toggle */}
         <div className="mb-4 flex items-center">
@@ -180,11 +213,13 @@ const EditUser = ({ userId }) => {
             type="checkbox"
             id="admin"
             name="admin"
-            checked={userData?.admin}
+            checked={userData.admin}
             onChange={handleAdminToggle}
             className="h-5 w-5 cursor-pointer"
           />
-          <span className="ml-2 text-sm">{userData.admin ? "✅ Admin" : "❌ Not Admin"}</span>
+          <span className="ml-2 text-sm">
+            {userData.admin ? "✅ Admin" : "❌ Not Admin"}
+          </span>
         </div>
 
         <button

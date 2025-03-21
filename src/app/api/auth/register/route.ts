@@ -81,7 +81,6 @@ export async function GET(){
 
 
 
-
 export async function PATCH(request: NextRequest) {
   try {
     // Get user ID from the query parameter
@@ -95,7 +94,7 @@ export async function PATCH(request: NextRequest) {
     const { name, number, balance, dailyLimit, admin } = await request.json();
 
     // Basic Validation
-    if (!name && !number ) {
+    if (!name && !number) {
       return NextResponse.json(
         { error: "At least one field (name, number) is required" },
         { status: 400 }
@@ -114,9 +113,9 @@ export async function PATCH(request: NextRequest) {
     // Update user data if provided
     if (name) user.name = name;
     if (number) user.number = number;
-    if (balance) user.balance = balance;
-    if (admin) user.admin = admin;
-    if (dailyLimit) user.dailyLimit = dailyLimit;
+    if (typeof balance !== "undefined") user.balance = balance;
+    if (typeof admin !== "undefined") user.admin = admin; // ✅ Proper admin update handling
+    if (typeof dailyLimit !== "undefined") user.dailyLimit = dailyLimit;
 
     // Save the updated user data
     await user.save();
