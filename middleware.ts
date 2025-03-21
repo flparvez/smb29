@@ -7,7 +7,7 @@ export default withAuth(
     const { pathname } = req.nextUrl;
 
     // If user is logged in and tries to access /login or /register, redirect to dashboard
-    if (token && (pathname === "/" || pathname === "/login"  || pathname === "/register")) {
+    if (token && (pathname === "/" || pathname === "/login" || pathname === "/register")) {
       return NextResponse.redirect(new URL("/user/dashboard", req.url));
     }
 
@@ -19,7 +19,7 @@ export default withAuth(
 
     // Protect /admin route (only admin can access)
     if (pathname.startsWith("/admin")) {
-      if (!token || token.role !== "admin") {
+      if (!token || !token.admin) {  // Check the 'admin' field in the token
         return NextResponse.redirect(new URL("/user/dashboard", req.url));
       }
     }
