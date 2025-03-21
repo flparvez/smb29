@@ -113,7 +113,22 @@ const Packages = () => {
       dailyIncome: 6000,
       validity: 330,
     },
+    {
+      title: "Platinum Plus",
+      price: 20000,
+      dailyAds: 100,
+      dailyIncome: 10000,
+      validity: 390,
+    },
+    {
+      title: "Ruby",
+      price: 50000,
+      dailyAds: 200,
+      dailyIncome: 20000,
+      validity: 490,
+    }
   ];
+
 
  // Handle Buy Now button click
  const handleBuyNow = async (plan) => {
