@@ -4,6 +4,7 @@ import ResponsiveItems from '@/components/ServiceList'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
+
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { useEffect } from 'react'
@@ -18,6 +19,12 @@ const UserDashboard = () => {
       }, [session, router]);
       const admin = session?.user?.admin;
 
+        const contacts = [
+          { name: "TikTok", imgSrc: "https://tshop29.com/img/tik.png", link: "#" },
+          { name: "Whatsapp", imgSrc: "https://tshop29.com/img/wh.png", link: "#" },
+          { name: "YouTube", imgSrc: "https://tshop29.com/img/y.png", link: "#", target: "_blank" },
+          { name: "Telegram", imgSrc: "https://tshop29.com/img/te.png", link: "#" },
+        ];
   return (
     <div className='container mx-auto '>
    
@@ -27,7 +34,29 @@ const UserDashboard = () => {
   <Image src="/banner.webp" alt="banner" width={1000} height={300} />
   
   <ResponsiveItems />
-
+  <div className="border border-gray-300 rounded-lg mt-5">
+      <h2 className="p-3 text-[#0c0ce8] text-xl font-bold">Contact</h2>
+      <hr className="border-gray-300" />
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 rounded-lg my-4">
+        {contacts.map((contact, index) => (
+          <Link
+            key={index}
+            href={contact.link}
+         
+          >
+            <div className="cursor-pointer flex items-center flex-col">
+              <img
+                alt={contact.name}
+                src={contact.imgSrc}
+                
+                className="h-10 w-10"
+              />
+              <h2 className="text-black mt-2 text-center">{contact.name}</h2>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
   {/* how to work */}
   <div className="bg-white rounded-lg shadow-lg border border-gray-300 flex items-center">
 <div>
@@ -37,6 +66,7 @@ const UserDashboard = () => {
 <h2 className='text-xl font-bold'>How To Work</h2>
 <h2>Click here to see youtube video tutorial</h2>
 </div>
+
   </div>
 </div>
   )
