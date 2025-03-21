@@ -122,10 +122,10 @@ const Packages = () => {
     },
     {
       title: "Ruby",
-      price: 50000,
-      dailyAds: 200,
-      dailyIncome: 20000,
-      validity: 490,
+      price: 25000,
+      dailyAds: 150,
+      dailyIncome: 15000,
+      validity: 450,
     }
   ];
 
