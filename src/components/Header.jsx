@@ -62,7 +62,7 @@ export default function HeaderNavbar({admin}) {
           <Image width={100} height={100} src="/profileu.webp" alt="Profile" className="w-full h-full object-cover" />
         </div>
         {
-      admin ? <Link href={"/admin"} className="text-[#7baa1b] text-xl  font-extrabold ml-6 mt-4">Admin</Link> : ""
+      admin ? <Link href={"/admin"} className="text-[#030401] text-xl  font-extrabold ml-6 mt-4">Admin</Link> : ""
     }
         <div className="flex flex-col items-start">
           {/* Name */}
