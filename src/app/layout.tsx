@@ -3,6 +3,18 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Provider";
 
+
+
+
+
+
+// const fetchSettings = async () => {
+//   const { data } = await axios.get("/api/settings");
+//   return data;
+// };
+
+// const settings = await fetchSettings();
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

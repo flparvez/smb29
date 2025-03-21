@@ -26,6 +26,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
+      
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
 
       {/* Stats Cards */}
@@ -61,11 +62,20 @@ const AdminDashboard = () => {
           💸 Withdraw
         </Link>
         <Link
+          href="/admin/setting"
+          className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
+        >
+          Setting
+        </Link>
+
+              <Link
           href="/admin/users"
           className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
         >
           All Users
         </Link>
+
+        
      <Link
           href="/admin/create-ad"
           className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
