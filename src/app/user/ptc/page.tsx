@@ -23,7 +23,7 @@ const Task = () => {
       }
     } catch (err) {
       console.error("Failed to fetch ads:", err);
-      setError("⚠️ Network error. Please try again later.");
+      setError("⚠️ ad limit reached");
     }
   }, []);
 

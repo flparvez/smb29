@@ -18,7 +18,7 @@ const Deposits = () => {
   
           const { data } = await axios.get(`/api/deposit`);
           if (Array.isArray(data)) {
-            setDeposit(data.filter((d) => d.user._id === session?.user?.id));
+            setDeposit(data.filter((d) => d?.user?._id === session?.user?.id));
           }
 
         //   filter deposit data by user id
@@ -37,8 +37,9 @@ const Deposits = () => {
  
   
           const { data } = await axios.get(`/api/withdraw`);
+        
           if (Array.isArray(data)) {
-            setWithdraw(data.filter((d) => d.user._id === session?.user?.id));
+            setWithdraw(data?.filter((d) => d.user?._id === session?.user?.id));
           }
 
         //   filter deposit data by user id
@@ -51,7 +52,6 @@ const Deposits = () => {
         fetchWithdrawData();
       }, [fetchWithdrawData]);
  
-
 
   return (
 <div>
