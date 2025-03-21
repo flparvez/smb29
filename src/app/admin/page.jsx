@@ -25,7 +25,7 @@ const AdminDashboard = () => {
         }
       }, [session, router]);
 
-    const { data, loading, error, refetch } = useFetchData("/api/setting", { revalidate: true });
+    const { data, loading, error } = useFetchData("/api/setting", { revalidate: true });
 
     if (loading) return <p>Loading settings...</p>;
     if (error) return <p className="text-red-500">Error: {error}</p>;

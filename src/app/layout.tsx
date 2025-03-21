@@ -27,10 +27,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: {
-      template: `%s - ${settings.title || "SMB29"}`,
-      default: settings.title || "SMB29 PTC SITE",
+      template: `%s - ${settings?.title || "SMB29"}`,
+      default: settings?.title || "SMB29 PTC SITE",
     },
-    description: settings.description || "SMB29 - Best PTC Site In Bangladesh",
+    description: settings?.description || "SMB29 - Best PTC Site In Bangladesh",
     keywords: ["SMB29", "ptc site bd", "smb29 ptc"],
     verification: {
       other: {

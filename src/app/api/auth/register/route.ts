@@ -92,7 +92,7 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "User ID is required" }, { status: 400 });
     }
 
-    const { name, number, balance, dailyLimit } = await request.json();
+    const { name, number, balance, dailyLimit, admin } = await request.json();
 
     // Basic Validation
     if (!name && !number ) {
@@ -115,6 +115,7 @@ export async function PATCH(request: NextRequest) {
     if (name) user.name = name;
     if (number) user.number = number;
     if (balance) user.balance = balance;
+    if (admin) user.admin = admin;
     if (dailyLimit) user.dailyLimit = dailyLimit;
 
     // Save the updated user data

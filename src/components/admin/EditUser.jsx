@@ -8,6 +8,8 @@ const EditUser = ({ userId }) => {
   const [userData, setUserData] = useState({
     name: "",
     number: "",
+    planStartedAt: "",
+    admin: false, // ✅ Set default as boolean
     balance: 0,
     dailyLimit: 0,
   });
@@ -15,17 +17,18 @@ const EditUser = ({ userId }) => {
   const [error, setError] = useState(null);
   const router = useRouter();
 
-  // Fetch user data on component mount
+  // 🔍 Fetch user data on component mount
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await fetch(`/api/auth/user?id=${userId}`);
         const data = await response.json();
-        console.log(data)
         if (data) {
           setUserData({
             name: data.name,
             number: data.number,
+            planStartedAt: data.planStartedAt,
+            admin: data.admin,
             balance: data.balance,
             dailyLimit: data.dailyLimit,
           });
@@ -39,7 +42,7 @@ const EditUser = ({ userId }) => {
     fetchUserData();
   }, [userId]);
 
-  // Handle form input changes
+  // ✏️ Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData((prevData) => ({
@@ -48,7 +51,15 @@ const EditUser = ({ userId }) => {
     }));
   };
 
-  // Handle form submission
+  // ✅ Toggle Admin Status
+  const handleAdminToggle = () => {
+    setUserData((prevData) => ({
+      ...prevData,
+      admin: !prevData.admin, // 🔥 Toggle between true/false
+    }));
+  };
+
+  // 🛠️ Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -67,7 +78,7 @@ const EditUser = ({ userId }) => {
 
       if (response.ok) {
         toast.success("User updated successfully!");
-        router.push("/admin/users"); // Redirect to profile or another page
+        router.push("/admin/users"); // Redirect to user list
       } else {
         setError(data.error || "Failed to update user");
       }
@@ -144,10 +155,44 @@ const EditUser = ({ userId }) => {
           />
         </div>
 
+   <div className="mb-4">
+         {
+          userData?.planStartedAt ? <h2>Plan started at: {" "}
+          {new Date(userData?.planStartedAt).toLocaleString("en-GB", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          })}</h2> : <h2 className="text-red-500"> no plan started</h2>
+         }
+        </div> 
+
+
+
+        {/* 🔥 Admin Toggle */}
+        <div className="mb-4 flex items-center">
+          <label htmlFor="admin" className="block text-sm font-medium text-gray-700 mr-4">
+            Admin Status
+          </label>
+          <input
+            type="checkbox"
+            id="admin"
+            name="admin"
+            checked={userData?.admin}
+            onChange={handleAdminToggle}
+            className="h-5 w-5 cursor-pointer"
+          />
+          <span className="ml-2 text-sm">{userData.admin ? "✅ Admin" : "❌ Not Admin"}</span>
+        </div>
+
         <button
           type="submit"
           disabled={loading}
-          className={`w-full py-2 px-4 rounded bg-blue-500 text-white ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`w-full py-2 px-4 rounded bg-blue-500 text-white ${
+            loading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
           {loading ? "Updating..." : "Update User"}
         </button>
