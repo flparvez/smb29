@@ -4,6 +4,7 @@ import { connectToDb } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import Withdraw from "@/models/Withdraw";
 import User from "@/models/User";
+import Settings from "@/models/setting"; // Import your Settings model
 import mongoose from "mongoose";
 
 // POST API route for withdrawal
@@ -41,6 +42,44 @@ export const POST = async (req: NextRequest) => {
     user.balance -= amount;
     await user.save();
 
+    // Update the stats in the Settings model
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+
+    // Aggregate total withdrawals for today
+    const totalWithdrawalsToday = await Withdraw.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startOfDay, $lte: endOfDay }, // Filter for today's withdrawals
+          approved: true, // Only approved withdrawals
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$amount" }, // Sum up withdrawal amounts
+        },
+      },
+    ]);
+
+    const totalWithdrawalAmount = totalWithdrawalsToday[0] ? totalWithdrawalsToday[0].totalAmount : 0;
+
+    // Find the settings document and update
+    const settings = await Settings.findOne({});
+    if (settings) {
+      // Update the today's withdrawals
+      settings.stats.todayWithdrawals = totalWithdrawalAmount;
+
+      // Update total withdrawals (you can keep a running total as well)
+      settings.stats.totalWithdrawals += amount;
+
+      // Save the updated stats
+      await settings.save();
+    } else {
+      return NextResponse.json({ error: "Settings not found!" }, { status: 404 });
+    }
+
     return NextResponse.json(
       { message: "✅ উইথড্র সফলভাবে সাবমিট হয়েছে! অনুমোদনের অপেক্ষায়...", withdraw },
       { status: 201 }
@@ -50,7 +89,6 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({ error: `⚠️ উইথড্রাল ফেইল্ড: ${error}` }, { status: 500 });
   }
 };
-
 
 
 

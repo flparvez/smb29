@@ -9,7 +9,7 @@ export default function AdminSettingsPage() {
     description: "",
     logo: "",
     paymentMethods: { bkash: "", nagad: "" },
-    stats: { totalUsers: 0, todayDeposits: 0, todayWithdrawals: 0 },
+
   });
 
   const [loading, setLoading] = useState(false);

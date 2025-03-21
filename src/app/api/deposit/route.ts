@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { connectToDb } from "@/lib/db";
 import Deposit, { IDeposit } from "@/models/Deposit";
 import User from "@/models/User";
+import Settings from "@/models/setting"; // Import your Settings model
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 
@@ -23,6 +24,44 @@ export const POST = async (req: NextRequest) => {
 
     const depositData = { ...body, user: session.user.id, approved: false };
     const deposit = await Deposit.create(depositData);
+
+    // Update the stats in the Settings model
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+
+    // Aggregate total deposits for today
+    const totalDepositsToday = await Deposit.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startOfDay, $lte: endOfDay }, // Filter for today's deposits
+          approved: true, // Only approved deposits
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$amount" }, // Sum up deposit amounts
+        },
+      },
+    ]);
+
+    const totalDepositAmount = totalDepositsToday[0] ? totalDepositsToday[0].totalAmount : 0;
+
+    // Find the settings document and update
+    const settings = await Settings.findOne({});
+    if (settings) {
+      // Update the today's deposits
+      settings.stats.todayDeposits = totalDepositAmount;
+
+      // Update total deposits (keep a running total)
+      settings.stats.totalDeposits += body.amount;
+
+      // Save the updated stats
+      await settings.save();
+    } else {
+      return new NextResponse(JSON.stringify({ error: "Settings not found!" }), { status: 404 });
+    }
 
     return new NextResponse(
       JSON.stringify({ message: "Deposit request submitted. Awaiting approval.", deposit }),
