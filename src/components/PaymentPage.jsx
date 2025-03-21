@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-
+import PaymentNumber from "./PaymentNumber"
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
@@ -64,34 +64,7 @@ toast.error("Deposit Failed",error.message);
                 <Image width={500} height={500}  className=" w-full max-w-lg" src="/cs2.webp" alt=""  />
             
     </div>
-    <div className=" m-5 p-4 bg-white rounded-lg py-5 shadow whitespace-nowrap">
-
-        <div className="flex gap-1 items-center">
-            <Image src="/nagad.png" width={100} height={100} alt="" className="-ml-[2px] h-7 w-7" />
-          
-            <h2 className=" text-lg ">Nagad: </h2>
-            <h3 className="text-lg" id="p2">01905485427</h3>
-             <div><span className="bg-[#15A710] rounded-lg cursor-pointer px-3 text-white text-sm" >Copy</span></div>
-        </div>
-
-    <div className="flex gap-1 mt-2 items-center">
-            <Image src="/bkash.png" width={100} height={100} alt="" className="-ml-[2px] h-7 w-7" />
-          
-            <h2 className=" text-lg ">Bkash: </h2>
-            <h3 className="text-lg" id="p2">01905485427</h3>
-             <div><span className="bg-[#15A710] rounded-lg cursor-pointer px-3 text-white text-sm" >Copy</span></div>
-        </div>
-
-
-
-        <div className="flex items-center gap-1 mt-5">
-  <Image width={100} height={100}  src="/amount.jpg" alt="" className="-ml-[2px] h-7 w-7" />
-
-            <h2 className="text-xl " id="p1">Amount: {selectedAmount} Taka</h2> <span
-                className="bg-[#15A710] rounded-lg cursor-pointer px-3 text-white text-sm" >Copy</span>
-        </div>
-    </div>
-
+    <PaymentNumber selectedAmount={selectedAmount} />
     <form onSubmit={handleSubmit} >
     <div className="flex flex-col justify-center m-5 p-4 bg-white rounded-lg py-5 shadow">
   <h2 className="mb-3 text-xl">ট্রানজেকশন নম্বর</h2>
