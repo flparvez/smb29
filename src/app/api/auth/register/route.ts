@@ -1,74 +1,74 @@
 import { connectToDb } from "@/lib/db";
 import User from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 
 export async function POST(request: NextRequest) {
   try {
     const { name, number, password, refer } = await request.json();
 
-    // Basic Validation
-    if (!number || !password) {
+    // 🔍 Basic Validation
+    if (!name || !number || !password) {
       return NextResponse.json(
-        { error: "Number and Password are required" },
-        { status: 401 }
+        { error: "Name, Number, and Password are required" },
+        { status: 400 }
       );
     }
 
-    // Connect to DB
+    // 🛠️ Connect to DB
     await connectToDb();
 
-    // Check if user already exists
+    // 🔎 Check if the user already exists
     const existingUser = await User.findOne({ number });
-
     if (existingUser) {
       return NextResponse.json(
-        { error: "User already exists" },
+        { error: "User already exists with this number" },
         { status: 403 }
       );
     }
 
-    // Prepare new user data
+    // 🎯 Prepare new user data (No password hashing)
     const newUserData = {
       name,
       number,
-      password,
+      password, // Password stored as plain text
       referredBy: null,
+      balance: 100,
     };
 
-    // Handle Referral (if provided)
-    if (refer) {
-      const referrer = await User.findById(refer);
+    // 🎁 Handle Referral (Optional & Error-Free)
+    if (refer && mongoose.Types.ObjectId.isValid(refer.trim())) {
+      const referrer = await User.findById(refer.trim());
 
       if (referrer) {
         newUserData.referredBy = referrer._id;
 
-        // Reward the referrer
-        referrer.balance += 10; // 🎁 Reward 10 Taka
-        referrer.referc += 1; // ➕ Increment referral count
+        // 🎉 Reward the referrer (referral count +1)
+        referrer.referc += 1;
         await referrer.save();
-      } else {
-        return NextResponse.json(
-          { error: "Invalid referral code" },
-          { status: 400 }
-        );
       }
     }
 
-    // Create the new user
+    // 🔥 Create the new user
     const newUser = await User.create(newUserData);
 
     return NextResponse.json(
-      { message: "User Registered Successfully", user: newUser },
+      { message: "User Registered Successfully!", user: newUser },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Registration Error:", error);
+    console.error("🚨 Registration Error:", error);
     return NextResponse.json(
-      { error: "Failed to register user" },
+      { error: "Failed to register user. Please try again later." },
       { status: 500 }
     );
   }
 }
+
+
+
+
+//  Get User
 
 export async function GET(){
     connectToDb()

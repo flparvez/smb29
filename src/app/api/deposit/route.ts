@@ -80,8 +80,8 @@ export const POST = async (req: NextRequest) => {
 // --- PATCH: Approve deposit & update user balance ---
 export const PATCH = async (req: NextRequest) => {
   try {
-    const { searchParams } = new URL(req.url);  
-    const id = searchParams.get('id');
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
 
     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
       return new NextResponse(JSON.stringify({ error: "Invalid deposit ID" }), { status: 403 });
@@ -93,23 +93,34 @@ export const PATCH = async (req: NextRequest) => {
       return new NextResponse(JSON.stringify({ error: "Invalid or already approved deposit" }), { status: 400 });
     }
 
+    // ✅ Mark deposit as approved
     deposit.approved = true;
     await deposit.save();
 
     const user = await User.findById(deposit.user._id);
     if (user) {
+      // 💰 Update user balance with deposit amount
       user.balance += deposit.amount;
       await user.save();
+
+      // 🎁 Reward referrer with 10% bonus (if referredBy exists)
+      if (user.referredBy) {
+        await user.rewardReferral(deposit.amount);
+      }
     }
 
-    return new NextResponse(JSON.stringify({ message: "Deposit approved successfully", user }), { status: 200 });
+    return new NextResponse(
+      JSON.stringify({ message: "Deposit approved successfully", user }),
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error approving deposit:", error);
-    console.log(error)
-    return new NextResponse(JSON.stringify({ error: `Deposit approval failed: ${error}` }), { status: 500 });
+    return new NextResponse(
+      JSON.stringify({ error: `Deposit approval failed: ${error}` }),
+      { status: 500 }
+    );
   }
 };
-
 // --- DELETE: Remove a deposit ---
 export const DELETE = async (request: NextRequest) => {
   try {

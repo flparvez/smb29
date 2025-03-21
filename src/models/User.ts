@@ -59,12 +59,13 @@ userSchema.methods.comparePassword = async function (enteredPassword: string) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// 🎉 Reward Referral
-userSchema.methods.rewardReferral = async function () {
+// 🎉 Reward Referral (10% of deposit amount)
+userSchema.methods.rewardReferral = async function (depositAmount: number) {
   if (this.referredBy) {
     const referrer = await User.findById(this.referredBy);
     if (referrer) {
-      referrer.balance += 10; // 🎁 Reward referrer (10 Taka Bonus)
+      const reward = (depositAmount * 10) / 100; // 🎁 Calculate 10% reward
+      referrer.balance += reward; // 💰 Add the reward to referrer's balance
       referrer.referc += 1; // ➕ Increment referral count
       await referrer.save();
     }
