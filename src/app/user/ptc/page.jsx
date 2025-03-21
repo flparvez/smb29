@@ -2,13 +2,48 @@
 
 import { IAds } from "@/models/Ads";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 
 const Task = () => {
-  const [ads, setAds] = useState<IAds[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [ads, setAds] = useState([]);
+  const [error, setError] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const { data: session, status } = useSession();
+
+
+  // Fetch user data by session ID
+  const fetchUserData = useCallback(async () => {
+    if (status === "loading") return; // Session loading
+
+    if (!session?.user?.id) {
+      setError("User not found");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const { data } = await axios.get(`/api/auth/user?id=${session.user.id}`);
+      setUserData(data);
+      setError("");
+    } catch (err) {
+      console.error("Failed to fetch user data:", err);
+      setError("Failed to load user data");
+      toast.error("Could not load user details");
+    } finally {
+      setLoading(false);
+    }
+  }, [session, status,setError]);
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
+
 
   // Fetch ads data and handle errors
   const fetchAds = useCallback(async () => {
@@ -25,12 +60,21 @@ const Task = () => {
       console.error("Failed to fetch ads:", err);
       setError("⚠️ ad limit reached");
     }
-  }, []);
+  }, [setError]);
 
   useEffect(() => {
     fetchAds();
   }, [fetchAds]);
 
+    // Show loading or error message
+    if (loading) return <p>Loading Ads</p>;
+    if (error) return <p className="text-red-500">{error}</p>;
+  
+    const times= userData?.dailyLimit - userData?.adsWatchedToday
+    // slice ads by number
+    const newAds = ads.slice(0, times);
+   
+  
   return (
     <div className="min-h-screen bg-gray-100 p-4">
 
@@ -58,7 +102,7 @@ const Task = () => {
           {error}
           {toast.error(error)}
         </div>
-      ) : ads.length > 0 ? (
+      ) : newAds?.length > 0 ? (
         <div className="overflow-x-auto">
           <table className="w-full border-collapse border border-gray-200">
             <thead className="bg-blue-500 text-white">
@@ -69,7 +113,7 @@ const Task = () => {
               </tr>
             </thead>
             <tbody>
-              {ads.map((ad: IAds, index: number) => (
+              {newAds?.map((ad,index) => (
                 <tr
                   key={ad._id}
                   className="hover:bg-gray-100 transition duration-200"

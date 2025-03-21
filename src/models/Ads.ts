@@ -15,6 +15,6 @@ const AdsSchema: Schema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });
 
-const Ads = mongoose.models.Ads || mongoose.model<IAds>("Ads", AdsSchema);
+const Ads = mongoose.models?.Ads || mongoose.model<IAds>("Ads", AdsSchema);
 
 export default Ads;
