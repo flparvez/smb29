@@ -75,21 +75,21 @@ const DepositPage = () => {
       id: 12,
       name: "Bkash",
       image:
-        "https://tshop29.com/assets/images/gateway/66571c564ca4a1716984918.png",
+        "https://i.ibb.co/5x4bBPM9/image.png",
       alias: "bkash",
     },
     {
       id: 13,
       name: "Nagad",
       image:
-        "https://tshop29.com/assets/images/gateway/66571c9fbfa491716984991.png",
+        "https://i.ibb.co/Q7Mm0ZP9/image.png",
       alias: "nagad",
     },
     {
       id: 14,
       name: "Rocket",
       image:
-        "https://tshop29.com/assets/images/gateway/66571cd0149f91716985040.jpeg",
+        "https://i.ibb.co/TMNJKV8w/image.png",
       alias: "rocket",
     },
   ];

@@ -20,10 +20,10 @@ const UserDashboard = () => {
       const admin = session?.user?.admin;
 
         const contacts = [
-          { name: "TikTok", imgSrc: "https://tshop29.com/img/tik.png", link: "#" },
-          { name: "Whatsapp", imgSrc: "https://tshop29.com/img/wh.png", link: "#" },
-          { name: "YouTube", imgSrc: "https://tshop29.com/img/y.png", link: "#", target: "_blank" },
-          { name: "Telegram", imgSrc: "https://tshop29.com/img/te.png", link: "#" },
+          { name: "TikTok", imgSrc: "https://i.ibb.co/6xjgGrX/image.png", link: "#" },
+          { name: "Whatsapp", imgSrc: "https://i.ibb.co/Y70yGNsW/image.png", link: "#" },
+          { name: "YouTube", imgSrc: "https://i.ibb.co/84gGv0kk/image.png", link: "#", target: "_blank" },
+          { name: "Telegram", imgSrc: "https://i.ibb.co/0V9LWf7W/image.png", link: "#" },
         ];
   return (
     <div className='container mx-auto '>
@@ -31,7 +31,7 @@ const UserDashboard = () => {
     <HeaderNavbar admin={admin} />
     
   {/* banner image */}
-  <Image src="/banner.webp" alt="banner" width={1000} height={300} />
+  <Image src="https://i.ibb.co.com/rGVMNhL5/image.png" alt="banner" width={1000} height={300} />
   
   <ResponsiveItems />
   <div className="border border-gray-300 rounded-lg mt-5">
