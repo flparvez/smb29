@@ -66,8 +66,8 @@ useEffect(() => {
                   key={user._id}
                   className="hover:bg-gray-100 transition duration-200"
                 >
-                  <td className="p-2 text-center border border-gray-300">
-                    {user.name}
+                  <td className="p-2 text-center line-clamp-2 border border-gray-800">
+                   <Link href={`/admin/users/${user._id}`}>{user.name}</Link>
                   </td>
                   <td className="p-2 text-center border border-gray-300">
                     {user.number}
