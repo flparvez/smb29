@@ -69,7 +69,7 @@ const AdViewPage = ({ id }) => {
       }
 
       toast.success("✅ Ad viewed successfully! Balance added.");
-      router.push("/user/dashboard");
+      router.push("/user/ptc");
     } catch (error) {
       console.error("Failed to complete ad:", error);
       setError("Failed to complete ad.");

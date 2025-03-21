@@ -22,8 +22,9 @@ const Packages = () => {
         
    
             const { data } = await axios.get(`/api/save-plan`);
+            console.log(data)
             if (Array.isArray(data?.plans)) {
-              setPlans(data?.plans.filter((d) => d.user._id === session?.user?.id));
+              setPlans(data?.plans.filter((d) => d?.user?._id === session?.user?.id));
             }
   
   
@@ -35,8 +36,6 @@ const Packages = () => {
    
 
 
-
-console.log(myplan[0]?.title)
 
 
         // Fetch user data by session ID
