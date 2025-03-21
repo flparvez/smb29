@@ -1,12 +1,30 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const CreateAd = () => {
   const [adName, setAdName] = useState("");
   const [adLink, setAdLink] = useState("");
   const [loading, setLoading] = useState(false);
+
+
+  const { data: session } = useSession();
+
+  const admin = session?.user?.admin;
+
+    const router = useRouter();
+      // Use useEffect to handle redirect after component render
+      useEffect(() => {
+        if (!admin) {
+         toast.error("You are not Admin to access this page.");
+
+          router.push('/user/dashboard');
+        }
+      }, [session, router,admin]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

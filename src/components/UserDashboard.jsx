@@ -3,6 +3,7 @@ import HeaderNavbar from '@/components/Header'
 import ResponsiveItems from '@/components/ServiceList'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { useEffect } from 'react'
@@ -15,13 +16,16 @@ const UserDashboard = () => {
           router.push('/');
         }
       }, [session, router]);
-    
+      const admin = session?.user?.admin;
+
   return (
     <div className='container mx-auto '>
-    <HeaderNavbar />
+   
+    <HeaderNavbar admin={admin} />
+    
   {/* banner image */}
   <Image src="/banner.webp" alt="banner" width={1000} height={300} />
-
+  
   <ResponsiveItems />
 
   {/* how to work */}

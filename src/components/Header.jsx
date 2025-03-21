@@ -2,12 +2,13 @@
 import axios from "axios";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 
 
-export default function HeaderNavbar() {
+export default function HeaderNavbar({admin}) {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -60,7 +61,9 @@ export default function HeaderNavbar() {
         <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-300">
           <Image width={100} height={100} src="/profileu.webp" alt="Profile" className="w-full h-full object-cover" />
         </div>
-
+        {
+      admin ? <Link href={"/admin"} className="text-[#7baa1b] text-xl  font-extrabold ml-6 mt-4">Admin</Link> : ""
+    }
         <div className="flex flex-col items-start">
           {/* Name */}
           <span className="text-white text-xl mb-1">{userData?.name}</span>

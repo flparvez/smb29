@@ -5,11 +5,32 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 
 
 const AdminDepositApproval = () => {
  const [withdraw, setWithdraw] = useState();
+
+
+  const { data: session } = useSession();
+
+  const admin = session?.user?.admin;
+
+    const router = useRouter();
+      // Use useEffect to handle redirect after component render
+      useEffect(() => {
+        if (!admin) {
+         toast.error("You are not Admin to access this page.");
+
+          router.push('/user/dashboard');
+        }
+      }, [session, router]);
+
+
+
+
 //  filter approved deposits amount total
 const approvedwithdraw = withdraw?.filter((withdraw) => withdraw.approved);
 // totol amount

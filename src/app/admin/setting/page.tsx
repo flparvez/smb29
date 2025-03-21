@@ -2,6 +2,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
 export default function AdminSettingsPage() {
   const [settings, setSettings] = useState({
@@ -13,6 +16,19 @@ export default function AdminSettingsPage() {
   });
 
   const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
+
+  const admin = session?.user?.admin;
+
+    const router = useRouter();
+      // Use useEffect to handle redirect after component render
+      useEffect(() => {
+        if (!admin) {
+         toast.error("You are not Admin to access this page.");
+
+          router.push('/user/dashboard');
+        }
+      }, [session,admin, router]);
 
   // 🛠️ Fetch existing settings
   useEffect(() => {

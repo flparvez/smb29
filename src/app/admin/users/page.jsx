@@ -1,12 +1,32 @@
 "use client"
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link'
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 
 const Users = () => {
 const [User, setUser] = useState("");
 const [loading, setLoading] = useState(true);
+
+
+const { data: session } = useSession();
+
+const admin = session?.user?.admin;
+
+  const router = useRouter();
+    // Use useEffect to handle redirect after component render
+    useEffect(() => {
+      if (!admin) {
+       toast.error("You are not Admin to access this page.");
+
+        router.push('/user/dashboard');
+      }
+    }, [session, router]);
+
+
+
 // Fetch Users Data
 useEffect(() => {
   const fetchUsers = async () => {

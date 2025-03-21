@@ -3,9 +3,27 @@
 
 import Stats from "@/components/admin/Stats";
 import { useFetchData } from "@/lib/useFetchData";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
+
 
 const AdminDashboard = () => {
+  const { data: session } = useSession();
+
+  const admin = session?.user?.admin;
+
+    const router = useRouter();
+      // Use useEffect to handle redirect after component render
+      useEffect(() => {
+        if (!admin) {
+         toast.error("You are not Admin to access this page.");
+
+          router.push('/user/dashboard');
+        }
+      }, [session, router]);
 
     const { data, loading, error, refetch } = useFetchData("/api/setting", { revalidate: true });
 
