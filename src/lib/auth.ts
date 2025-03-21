@@ -38,10 +38,10 @@ export const authOptions:NextAuthOptions = {
                     type : "password",
                     placeholder : "Password"
                 },
-                role: {
+                admin: {
                     label: "Role",
-                    type: "text",
-                    placeholder: "Role"
+                    type: "boolea   ",
+                    placeholder: "admin"
                 }
             },
              async authorize(credentials) {
@@ -66,7 +66,7 @@ export const authOptions:NextAuthOptions = {
                     balance : user.balance,
                   
                     name : user.name,
-                    role : user.role,
+                    admin : user.admin,
                 }
              } catch (error) {
                 throw new Error("Database Error"+error);
@@ -88,7 +88,7 @@ export const authOptions:NextAuthOptions = {
                 token.id = user.id
                 token.name = user.name
        
-                token.role = user.role
+                token.admin = user.admin
                 
             }
 
@@ -102,7 +102,7 @@ export const authOptions:NextAuthOptions = {
                 session.user.name = token.name as string
                 session.user.number = token.number as number
                 session.user.balance = token.balance as number
-                session.user.role = token.role as string
+                session.user.admin = token.role as boolean
             }
 
             return session

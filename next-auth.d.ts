@@ -4,7 +4,7 @@ import "next-auth/jwt";
 declare module "next-auth" {
   interface User extends DefaultUser {
     id: string;
-    role: string;
+    admin: boolean;
     name: string;
     balance: number;
     number: number;
@@ -21,6 +21,6 @@ declare module "next-auth/jwt" {
     name: string;
     balance: number;
     number: number;
-    role: string;
+    admin: boolean;
   }
 }
