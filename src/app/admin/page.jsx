@@ -1,27 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
 
+import Stats from "@/components/admin/Stats";
+import { useFetchData } from "@/lib/useFetchData";
 import Link from "next/link";
 
 const AdminDashboard = () => {
 
-  const [stats, setStats] = useState({
-    totalUsers: 0,
-    totalAds: 0,
-    activePlans: 0,
-    earnings: 0,
-  });
+    const { data, loading, error, refetch } = useFetchData("/api/setting", { revalidate: true });
 
-  useEffect(() => {
-    // Sample stats fetch (Backend API setup needed)
-    setStats({
-      totalUsers: 120,
-      totalAds: 35,
-      activePlans: 70,
-      earnings: 10230,
-    });
-  }, []);
+    if (loading) return <p>Loading settings...</p>;
+    if (error) return <p className="text-red-500">Error: {error}</p>;
+
 
 
   return (
@@ -30,23 +20,7 @@ const AdminDashboard = () => {
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        {[
-          { label: "Total Users", value: stats.totalUsers, color: "bg-blue-500" },
-          { label: "Total Ads", value: stats.totalAds, color: "bg-yellow-500" },
-          { label: "Active Plans", value: stats.activePlans, color: "bg-green-500" },
-          { label: "Total Earnings", value: `$${stats.earnings}`, color: "bg-purple-500" },
-        ].map((card, index) => (
-          <div
-            key={index}
-            className={`p-4 rounded-lg text-white ${card.color} shadow-md`}
-          >
-            <h2 className="text-xl font-semibold">{card.label}</h2>
-            <p className="text-3xl mt-1 font-bold">{card.value}</p>
-          </div>
-        ))}
-      </div>
-
+  <Stats setting ={data?.stats} />
       {/* Action Buttons (Deposit, Withdraw, Create Ad) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         <Link

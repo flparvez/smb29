@@ -18,6 +18,11 @@ interface Deposit {
 
 const AdminDepositApproval = () => {
   const [deposits, setDeposits] = useState<Deposit[]>([]);
+//  filter approved deposits amount total
+const approvedDeposits = deposits?.filter((deposit) => deposit.approved);
+// totol amount
+const totalAmount = approvedDeposits?.reduce((total, deposit) => total + deposit.amount, 0);
+
 
   // Fetch deposits
   useEffect(() => {
@@ -67,8 +72,12 @@ const AdminDepositApproval = () => {
           clipRule="evenodd"
         ></path>
       </svg>
+
       <h2 className="text-xl font-bold">Deposit</h2>
     </Link>
+
+    <h2 className="text-2xl font-bold text-center">Total Approve Deposit: ৳{totalAmount}</h2>
+
       {deposits.map((deposit) => (
         <Card key={deposit._id} className="shadow-lg">
           <CardHeader>

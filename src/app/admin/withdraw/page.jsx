@@ -10,6 +10,11 @@ import Link from "next/link";
 
 const AdminDepositApproval = () => {
  const [withdraw, setWithdraw] = useState();
+//  filter approved deposits amount total
+const approvedwithdraw = withdraw?.filter((withdraw) => withdraw.approved);
+// totol amount
+const totalAmount = approvedwithdraw?.reduce((total, withdraw) => total + withdraw.amount, 0);
+
 
   // Fetch deposits
   useEffect(() => {
@@ -65,6 +70,7 @@ const AdminDepositApproval = () => {
       </svg>
       <h2 className="text-xl font-bold">Withdraw</h2>
     </Link>
+    <h2 className="text-2xl font-bold text-center">Total Approve Withdrawal: ৳{totalAmount}</h2>
       {withdraw?.map((withdraw) => (
         <Card key={withdraw._id} className="shadow-lg">
           <CardHeader>
