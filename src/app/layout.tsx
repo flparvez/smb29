@@ -60,7 +60,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href={settings.logo || "/default-logo.png"} />
+        <link rel="icon" href={settings?.logo || "/logo1.jpg"} />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
